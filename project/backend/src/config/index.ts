@@ -1,6 +1,11 @@
-import dotenv from 'dotenv';
+import { config as dotenvConfig } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-dotenv.config();
+// Configure dotenv with proper path resolution for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenvConfig({ path: join(__dirname, '../../.env') });
 
 export const config = {
   // Server Configuration
