@@ -4,13 +4,12 @@ nixPkgs = ['nodejs_20']
 
 [phases.install]
 cmds = [
-    'npm ci --legacy-peer-deps --only=production'
+    'npm install --legacy-peer-deps'
 ]
 
 [phases.build]
 cmds = [
-    'cd backend && npm ci --legacy-peer-deps',
-    'cd backend && npm run build'
+    'npm run build'
 ]
 
 [start]
@@ -18,4 +17,5 @@ cmd = 'cd backend && node dist/server.js'
 
 [variables]
 NODE_ENV = 'production'
+NODE_OPTIONS = '--max-http-header-size=32768'
 PORT = '5000'
