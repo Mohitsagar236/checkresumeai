@@ -72,11 +72,15 @@ RUN cd backend && npm ci --only=production --legacy-peer-deps && npm cache clean
 
 # Copy built applications
 COPY --from=backend-build --chown=nextjs:nodejs /app/backend/dist ./backend/dist
-COPY --from=frontend-build --chown=nextjs:nodejs /app/dist ./dist
+COPY --from=frontend-build --chown=nextjs:nodejs /app/frontend-build ./dist
 
 # Create backend directory and copy env files if they exist
 RUN mkdir -p ./backend/
-# Note: These COPY commands will be skipped if files don't exist (this is expected)
+# Create logs directory and set permissions
+RUN mkdir -p ./logs && chown nextjs:nodejs ./logs
+
+# Create required test directories for pdf-parse
+RUN mkdir -p ./test/data && touch ./test/data/05-versions-space.pdf && chown -R nextjs:nodejs ./test
 
 # Switch to non-root user
 USER nextjs

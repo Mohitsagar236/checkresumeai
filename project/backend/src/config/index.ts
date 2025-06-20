@@ -1,6 +1,6 @@
 import { config as dotenvConfig } from 'dotenv';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { dirname, join } from 'node:path';
 
 // Configure dotenv with proper path resolution for ES modules
 const __filename = fileURLToPath(import.meta.url);

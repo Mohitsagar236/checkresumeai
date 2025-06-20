@@ -1,0 +1,112 @@
+{
+  message: '🚀 Server running on http://localhost:5000',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T11:50:23.970Z'
+}
+{
+  message: '📚 API Documentation: http://localhost:5000/api/v1/health',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T11:50:23.974Z'
+}
+{
+  message: '🌍 Environment: development',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T11:50:23.975Z'
+}
+{
+  message: '🔐 CORS enabled for: Development domains',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T11:50:23.976Z'
+}
+{
+  message: '🚀 Server running on http://localhost:5000',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:45:28.465Z'
+}
+{
+  message: '📚 API Documentation: http://localhost:5000/api/v1/health',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:45:28.470Z'
+}
+{
+  message: '🌍 Environment: development',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:45:28.471Z'
+}
+{
+  message: '🔐 CORS enabled for: Development domains',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:45:28.472Z'
+}
+{
+  message: '🚀 Server running on http://localhost:5000',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:57:45.389Z'
+}
+{
+  message: '📚 API Documentation: http://localhost:5000/api/v1/health',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:57:45.440Z'
+}
+{
+  message: '🌍 Environment: development',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:57:45.444Z'
+}
+{
+  message: '🔐 CORS enabled for: Development domains',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-18T13:57:45.447Z'
+}
+{
+  message: '🚀 Server running on http://localhost:5000',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-19T11:44:02.046Z'
+}
+{
+  message: '📚 API Documentation: http://localhost:5000/api/v1/health',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-19T11:44:02.050Z'
+}
+{
+  message: '🌍 Environment: development',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-19T11:44:02.051Z'
+}
+{
+  message: '🔐 CORS enabled for: Development domains',
+  level: 'info',
+  service: 'checkresumeai-backend',
+  environment: 'development',
+  timestamp: '2025-06-19T11:44:02.052Z'
+}
