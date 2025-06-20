@@ -1,0 +1,51 @@
+{
+    "name":  "checkresumeai",
+    "version":  "1.0.0",
+    "private":  true,
+    "type":  "module",    "scripts":  {
+                    "dev":  "node --max-http-header-size=32768 ./node_modules/vite/bin/vite.js",
+                    "dev:safe":  "cross-env NODE_OPTIONS=\"--max-http-header-size=32768\" vite",
+                    "prebuild": "npm install",
+                    "build":  "node scripts/railway-build.js",
+                    "build:frontend": "vite build --mode production --minify esbuild",
+                    "build:backend": "cd backend && npm install && npm run build",
+                    "build:optimized":  "GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true vite build --mode production --minify esbuild",
+                    "simple-vercel-build":  "node scripts/simple-vercel-build.js",
+                    "render-build":  "node scripts/render-build.js",
+                    "ultra-fast-build":  "node scripts/ultra-fast-build.js",
+                    "setup-pdf-worker":  "echo \u0027Setting up PDF worker files...\u0027",
+                    "vercel-build":  "vite build --mode production --minify esbuild --emptyOutDir",
+                    "start":  "cd backend && node dist/server.js",
+                    "health-check":  "node scripts/health-check.js"
+                },
+    "devDependencies":  {
+                            "@vitejs/plugin-react":  "^4.5.2",
+                            "autoprefixer":  "^10.4.21",
+                            "cross-env":  "^7.0.3",
+                            "postcss":  "^8.5.6",
+                            "tailwindcss":  "^4.1.10",
+                            "vite":  "^6.3.5"
+                        },
+    "dependencies":  {
+                         "@radix-ui/react-dialog":  "^1.1.14",
+                         "@radix-ui/react-tabs":  "^1.1.12",
+                         "@supabase/supabase-js":  "^2.50.0",
+                         "@tailwindcss/postcss":  "^4.1.10",
+                         "@tanstack/react-query":  "^5.80.7",
+                         "@types/react":  "^19.1.8",
+                         "@types/react-dom":  "^19.1.6",
+                         "axios":  "^1.10.0",
+                         "class-variance-authority":  "^0.7.1",
+                         "clsx":  "^2.1.1",
+                         "framer-motion":  "^12.18.1",
+                         "lodash":  "^4.17.21",
+                         "lucide-react":  "^0.516.0",
+                         "pdfjs-dist":  "^5.3.31",
+                         "react":  "^19.1.0",
+                         "react-dom":  "^19.1.0",
+                         "react-helmet-async":  "^2.0.5",
+                         "react-router-dom":  "^7.6.2",
+                         "recharts":  "^2.15.3",
+                         "tailwind-merge":  "^3.3.1"
+                     }
+}

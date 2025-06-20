@@ -1,0 +1,644 @@
+{
+  "timestamp": "2025-06-02T07:50:27.388Z",
+  "domain": "checkresumeai.com",
+  "rankings": [
+    {
+      "keyword": "resume analyzer",
+      "position": 16,
+      "change": 6,
+      "traffic": 907,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "ATS checker",
+      "position": 11,
+      "change": 3,
+      "traffic": 972,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume scanner",
+      "position": 30,
+      "change": -1,
+      "traffic": 390,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "CV analyzer",
+      "position": 50,
+      "change": 6,
+      "traffic": 603,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume optimization",
+      "position": 24,
+      "change": 10,
+      "traffic": 278,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume feedback",
+      "position": 5,
+      "change": 7,
+      "traffic": 520,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "free resume analysis",
+      "position": 7,
+      "change": -3,
+      "traffic": 7,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "AI resume checker",
+      "position": 35,
+      "change": 10,
+      "traffic": 524,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume score",
+      "position": 44,
+      "change": 4,
+      "traffic": 964,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "ATS resume checker",
+      "position": 46,
+      "change": 7,
+      "traffic": 126,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume review",
+      "position": 43,
+      "change": 6,
+      "traffic": 836,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume parser",
+      "position": 10,
+      "change": 9,
+      "traffic": 113,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "resume grader",
+      "position": 31,
+      "change": -6,
+      "traffic": 780,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.408Z"
+    },
+    {
+      "keyword": "ATS compatibility",
+      "position": 30,
+      "change": -8,
+      "traffic": 872,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.409Z"
+    },
+    {
+      "keyword": "resume builder",
+      "position": 26,
+      "change": -5,
+      "traffic": 570,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.409Z"
+    },
+    {
+      "keyword": "career tools",
+      "position": 20,
+      "change": -9,
+      "traffic": 4,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.409Z"
+    },
+    {
+      "keyword": "job application tools",
+      "position": 32,
+      "change": 8,
+      "traffic": 886,
+      "url": "https://checkresumeai.com",
+      "lastUpdate": "2025-06-02T07:50:27.409Z"
+    }
+  ],
+  "competitorAnalysis": [
+    {
+      "domain": "topresume.com",
+      "organicKeywords": 4033,
+      "organicTraffic": 97102,
+      "backlinks": 3308,
+      "domainAuthority": 56,
+      "topKeywords": [
+        {
+          "keyword": "resume analyzer",
+          "position": 8,
+          "volume": 20942
+        },
+        {
+          "keyword": "ATS checker",
+          "position": 7,
+          "volume": 7018
+        },
+        {
+          "keyword": "resume scanner",
+          "position": 4,
+          "volume": 6817
+        },
+        {
+          "keyword": "CV analyzer",
+          "position": 6,
+          "volume": 1610
+        },
+        {
+          "keyword": "resume optimization",
+          "position": 1,
+          "volume": 4395
+        }
+      ],
+      "gapOpportunities": [
+        {
+          "keyword": "resume scanner",
+          "competitorPosition": 4,
+          "ourPosition": 30,
+          "volume": 6817,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "CV analyzer",
+          "competitorPosition": 6,
+          "ourPosition": 50,
+          "volume": 1610,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "resume optimization",
+          "competitorPosition": 1,
+          "ourPosition": 24,
+          "volume": 4395,
+          "opportunity": "High"
+        }
+      ]
+    },
+    {
+      "domain": "zety.com",
+      "organicKeywords": 3690,
+      "organicTraffic": 87858,
+      "backlinks": 9283,
+      "domainAuthority": 63,
+      "topKeywords": [
+        {
+          "keyword": "resume analyzer",
+          "position": 8,
+          "volume": 12324
+        },
+        {
+          "keyword": "ATS checker",
+          "position": 7,
+          "volume": 16462
+        },
+        {
+          "keyword": "resume scanner",
+          "position": 9,
+          "volume": 7142
+        },
+        {
+          "keyword": "CV analyzer",
+          "position": 10,
+          "volume": 7685
+        },
+        {
+          "keyword": "resume optimization",
+          "position": 1,
+          "volume": 12889
+        }
+      ],
+      "gapOpportunities": [
+        {
+          "keyword": "resume scanner",
+          "competitorPosition": 9,
+          "ourPosition": 30,
+          "volume": 7142,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "CV analyzer",
+          "competitorPosition": 10,
+          "ourPosition": 50,
+          "volume": 7685,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "resume optimization",
+          "competitorPosition": 1,
+          "ourPosition": 24,
+          "volume": 12889,
+          "opportunity": "High"
+        }
+      ]
+    },
+    {
+      "domain": "enhancv.com",
+      "organicKeywords": 5014,
+      "organicTraffic": 82570,
+      "backlinks": 4311,
+      "domainAuthority": 50,
+      "topKeywords": [
+        {
+          "keyword": "resume analyzer",
+          "position": 2,
+          "volume": 9540
+        },
+        {
+          "keyword": "ATS checker",
+          "position": 10,
+          "volume": 5076
+        },
+        {
+          "keyword": "resume scanner",
+          "position": 8,
+          "volume": 5241
+        },
+        {
+          "keyword": "CV analyzer",
+          "position": 10,
+          "volume": 16608
+        },
+        {
+          "keyword": "resume optimization",
+          "position": 2,
+          "volume": 17645
+        }
+      ],
+      "gapOpportunities": [
+        {
+          "keyword": "resume scanner",
+          "competitorPosition": 8,
+          "ourPosition": 30,
+          "volume": 5241,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "CV analyzer",
+          "competitorPosition": 10,
+          "ourPosition": 50,
+          "volume": 16608,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "resume optimization",
+          "competitorPosition": 2,
+          "ourPosition": 24,
+          "volume": 17645,
+          "opportunity": "High"
+        }
+      ]
+    },
+    {
+      "domain": "resumegenius.com",
+      "organicKeywords": 3695,
+      "organicTraffic": 65888,
+      "backlinks": 9935,
+      "domainAuthority": 42,
+      "topKeywords": [
+        {
+          "keyword": "resume analyzer",
+          "position": 2,
+          "volume": 6837
+        },
+        {
+          "keyword": "ATS checker",
+          "position": 5,
+          "volume": 8265
+        },
+        {
+          "keyword": "resume scanner",
+          "position": 6,
+          "volume": 18779
+        },
+        {
+          "keyword": "CV analyzer",
+          "position": 5,
+          "volume": 4680
+        },
+        {
+          "keyword": "resume optimization",
+          "position": 7,
+          "volume": 7308
+        }
+      ],
+      "gapOpportunities": [
+        {
+          "keyword": "resume scanner",
+          "competitorPosition": 6,
+          "ourPosition": 30,
+          "volume": 18779,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "CV analyzer",
+          "competitorPosition": 5,
+          "ourPosition": 50,
+          "volume": 4680,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "resume optimization",
+          "competitorPosition": 7,
+          "ourPosition": 24,
+          "volume": 7308,
+          "opportunity": "High"
+        }
+      ]
+    },
+    {
+      "domain": "resume.com",
+      "organicKeywords": 2010,
+      "organicTraffic": 64330,
+      "backlinks": 2390,
+      "domainAuthority": 79,
+      "topKeywords": [
+        {
+          "keyword": "resume analyzer",
+          "position": 1,
+          "volume": 19038
+        },
+        {
+          "keyword": "ATS checker",
+          "position": 8,
+          "volume": 17073
+        },
+        {
+          "keyword": "resume scanner",
+          "position": 10,
+          "volume": 15231
+        },
+        {
+          "keyword": "CV analyzer",
+          "position": 5,
+          "volume": 4513
+        },
+        {
+          "keyword": "resume optimization",
+          "position": 7,
+          "volume": 17652
+        }
+      ],
+      "gapOpportunities": [
+        {
+          "keyword": "resume scanner",
+          "competitorPosition": 10,
+          "ourPosition": 30,
+          "volume": 15231,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "CV analyzer",
+          "competitorPosition": 5,
+          "ourPosition": 50,
+          "volume": 4513,
+          "opportunity": "High"
+        },
+        {
+          "keyword": "resume optimization",
+          "competitorPosition": 7,
+          "ourPosition": 24,
+          "volume": 17652,
+          "opportunity": "High"
+        }
+      ]
+    }
+  ],
+  "opportunities": [
+    {
+      "keyword": "resume analyzer",
+      "difficulty": 6,
+      "volume": 43128,
+      "currentPosition": 24,
+      "opportunityScore": 47,
+      "priority": "Low",
+      "estimatedTraffic": 431
+    },
+    {
+      "keyword": "resume feedback",
+      "difficulty": 12,
+      "volume": 38261,
+      "currentPosition": 49,
+      "opportunityScore": 44,
+      "priority": "Low",
+      "estimatedTraffic": 382
+    },
+    {
+      "keyword": "resume parser",
+      "difficulty": 49,
+      "volume": 42991,
+      "currentPosition": 41,
+      "opportunityScore": 39,
+      "priority": "Low",
+      "estimatedTraffic": 429
+    },
+    {
+      "keyword": "career tools",
+      "difficulty": 21,
+      "volume": 46070,
+      "currentPosition": 7,
+      "opportunityScore": 39,
+      "priority": "Low",
+      "estimatedTraffic": 1888
+    },
+    {
+      "keyword": "resume optimization",
+      "difficulty": 31,
+      "volume": 29102,
+      "currentPosition": 64,
+      "opportunityScore": 38,
+      "priority": "Low",
+      "estimatedTraffic": 291
+    },
+    {
+      "keyword": "AI resume checker",
+      "difficulty": 16,
+      "volume": 22480,
+      "currentPosition": 25,
+      "opportunityScore": 38,
+      "priority": "Low",
+      "estimatedTraffic": 224
+    },
+    {
+      "keyword": "resume builder",
+      "difficulty": 62,
+      "volume": 44021,
+      "currentPosition": 39,
+      "opportunityScore": 38,
+      "priority": "Low",
+      "estimatedTraffic": 440
+    },
+    {
+      "keyword": "job application tools",
+      "difficulty": 57,
+      "volume": 43939,
+      "currentPosition": 72,
+      "opportunityScore": 38,
+      "priority": "Low",
+      "estimatedTraffic": 439
+    },
+    {
+      "keyword": "ATS resume checker",
+      "difficulty": 73,
+      "volume": 44718,
+      "currentPosition": 35,
+      "opportunityScore": 36,
+      "priority": "Low",
+      "estimatedTraffic": 447
+    },
+    {
+      "keyword": "ATS checker",
+      "difficulty": 20,
+      "volume": 14907,
+      "currentPosition": 43,
+      "opportunityScore": 35,
+      "priority": "Low",
+      "estimatedTraffic": 149
+    },
+    {
+      "keyword": "resume review",
+      "difficulty": 33,
+      "volume": 13552,
+      "currentPosition": 86,
+      "opportunityScore": 32,
+      "priority": "Low",
+      "estimatedTraffic": 135
+    },
+    {
+      "keyword": "resume scanner",
+      "difficulty": 71,
+      "volume": 25684,
+      "currentPosition": 75,
+      "opportunityScore": 30,
+      "priority": "Low",
+      "estimatedTraffic": 256
+    },
+    {
+      "keyword": "free resume analysis",
+      "difficulty": 46,
+      "volume": 42850,
+      "currentPosition": 13,
+      "opportunityScore": 29,
+      "priority": "Low",
+      "estimatedTraffic": 428
+    },
+    {
+      "keyword": "resume grader",
+      "difficulty": 38,
+      "volume": 6703,
+      "currentPosition": 63,
+      "opportunityScore": 29,
+      "priority": "Low",
+      "estimatedTraffic": 67
+    },
+    {
+      "keyword": "resume score",
+      "difficulty": 41,
+      "volume": 4499,
+      "currentPosition": 79,
+      "opportunityScore": 28,
+      "priority": "Low",
+      "estimatedTraffic": 44
+    },
+    {
+      "keyword": "CV analyzer",
+      "difficulty": 50,
+      "volume": 15566,
+      "currentPosition": 12,
+      "opportunityScore": 20,
+      "priority": "Low",
+      "estimatedTraffic": 155
+    },
+    {
+      "keyword": "ATS compatibility",
+      "difficulty": 98,
+      "volume": 2566,
+      "currentPosition": 48,
+      "opportunityScore": 18,
+      "priority": "Low",
+      "estimatedTraffic": 25
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "High Priority Keywords",
+      "action": "Create targeted content for high-opportunity keywords",
+      "keywords": [],
+      "impact": "High",
+      "effort": "Medium",
+      "timeline": "4-8 weeks"
+    },
+    {
+      "category": "Quick Wins",
+      "action": "Optimize existing pages ranking 11-20 to break into top 10",
+      "keywords": [
+        "resume analyzer",
+        "ATS checker",
+        "career tools"
+      ],
+      "impact": "Medium",
+      "effort": "Low",
+      "timeline": "2-4 weeks"
+    },
+    {
+      "category": "Competitor Gaps",
+      "action": "Target keywords where competitors rank but you don't",
+      "keywords": [
+        "resume scanner",
+        "CV analyzer",
+        "resume optimization",
+        "resume scanner",
+        "CV analyzer"
+      ],
+      "impact": "High",
+      "effort": "High",
+      "timeline": "8-12 weeks"
+    },
+    {
+      "category": "Technical SEO",
+      "action": "Improve Core Web Vitals and page speed",
+      "details": [
+        "Optimize images",
+        "Implement lazy loading",
+        "Reduce JavaScript bundle size"
+      ],
+      "impact": "Medium",
+      "effort": "Medium",
+      "timeline": "2-3 weeks"
+    },
+    {
+      "category": "Content Strategy",
+      "action": "Implement pillar content strategy from SEO_CONTENT_STRATEGY.md",
+      "details": [
+        "Create 3 pillar pages",
+        "Write 12 supporting articles",
+        "Build internal linking"
+      ],
+      "impact": "High",
+      "effort": "High",
+      "timeline": "12-16 weeks"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Nixpacks configuration for Railway
+[phases.setup]
+nixPkgs = ['nodejs_20']
+
+[phases.install]
+cmds = [
+    'npm ci --legacy-peer-deps --only=production'
+]
+
+[phases.build]
+cmds = [
+    'cd backend && npm ci --legacy-peer-deps',
+    'cd backend && npm run build'
+]
+
+[start]
+cmd = 'cd backend && node dist/server.js'
+
+[variables]
+NODE_ENV = 'production'
+PORT = '5000'

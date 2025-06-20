@@ -1,0 +1,65 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+/coverage
+/cypress
+*.test.js
+*.spec.js
+
+# Production
+/build
+/dist
+/frontend-build
+backend/dist
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories
+.idea
+.vscode
+*.swp
+*.swo
+
+# Cache
+.cache
+.npm
+.eslintcache
+
+# Temporary files
+*.log
+*.tmp
+tmp/
+temp/
+
+# Build artifacts
+*.tsbuildinfo
+.next
+out/
+build/
+dist/
+
+# Large binary files
+*.tgz
+*.tar.gz
+*.zip
+pdfjs-dist-*.tgz
+
+# Backup files
+*-backup/
+*_backup/
+*.bak

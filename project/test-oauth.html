@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>OAuth Testing Page</h1>
+    <div class="card">
+        <h2>Test OAuth State Parameter Handling</h2>
+        <div>
+            <button id="testGenerateState">Generate OAuth State</button>
+            <button id="testClearState">Clear OAuth State</button>
+            <button id="testVerifyState">Verify OAuth State</button>
+        </div>
+        <pre id="stateResult">Results will appear here...</pre>
+    </div>
+
+    <div class="card">
+        <h2>Simulate OAuth Flow</h2>
+        <div>
+            <button id="simulateOauth">Simulate OAuth Initiation</button>
+            <button id="simulateCallback">Simulate OAuth Callback</button>
+            <button id="simulateError">Simulate OAuth Error</button>
+        </div>
+        <pre id="oauthResult">Results will appear here...</pre>
+    </div>
+
+    <div class="card">
+        <h2>Local Storage Review</h2>
+        <button id="checkStorage">Check Local/Session Storage</button>
+        <pre id="storageResult">Storage data will appear here...</pre>
+    </div>
+
+    <script>
+        // Test the OAuth state parameter generation and verification
+        document.getElementById('testGenerateState').addEventListener('click', () => {
+            localStorage.removeItem('supabase-auth-state'); // Clear any existing state
+            const state = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+            localStorage.setItem('supabase-auth-state', state);
+            sessionStorage.setItem('supabase-auth-state', state);
+            sessionStorage.setItem('oauth-initiated-at', Date.now().toString());
+            
+            document.getElementById('stateResult').innerHTML = 
+                `<span class="success">✅ State generated:</span>\n` +
+                `State: ${state}\n` +
+                `Timestamp: ${sessionStorage.getItem('oauth-initiated-at')}`;
+        });
+
+        document.getElementById('testClearState').addEventListener('click', () => {
+            localStorage.removeItem('supabase-auth-state');
+            sessionStorage.removeItem('supabase-auth-state');
+            sessionStorage.removeItem('oauth-initiated-at');
+            
+            document.getElementById('stateResult').innerHTML = 
+                `<span class="info">ℹ️ All OAuth state parameters cleared</span>`;
+        });
+
+        document.getElementById('testVerifyState').addEventListener('click', () => {
+            const localState = localStorage.getItem('supabase-auth-state');
+            const sessionState = sessionStorage.getItem('supabase-auth-state');
+            const timestamp = sessionStorage.getItem('oauth-initiated-at');
+            
+            let result = '';
+            if (localState && sessionState) {
+                if (localState === sessionState) {
+                    result = `<span class="success">✅ State parameters match!</span>\n` +
+                             `State from localStorage: ${localState}\n` +
+                             `State from sessionStorage: ${sessionState}\n` +
+                             `Initiated at: ${timestamp ? new Date(parseInt(timestamp)).toLocaleTimeString() : 'Not set'}`;
+                } else {
+                    result = `<span class="error">❌ State parameters DO NOT match!</span>\n` +
+                             `State from localStorage: ${localState}\n` +
+                             `State from sessionStorage: ${sessionState}`;
+                }
+            } else {
+                result = `<span class="error">❌ State parameters not found!</span>\n` +
+                         `State from localStorage: ${localState || 'Not set'}\n` +
+                         `State from sessionStorage: ${sessionState || 'Not set'}`;
+            }
+            
+            document.getElementById('stateResult').innerHTML = result;
+        });
+
+        // Simulate OAuth flow
+        document.getElementById('simulateOauth').addEventListener('click', () => {
+            localStorage.removeItem('supabase-auth-state'); // Clear any existing state
+            const state = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+            localStorage.setItem('supabase-auth-state', state);
+            sessionStorage.setItem('supabase-auth-state', state);
+            sessionStorage.setItem('oauth-initiated-at', Date.now().toString());
+            
+            document.getElementById('oauthResult').innerHTML = 
+                `<span class="info">🚀 OAuth initiation simulated</span>\n` +
+                `Generated state: ${state}\n` +
+                `Timestamp: ${new Date().toLocaleTimeString()}`;
+        });
+
+        document.getElementById('simulateCallback').addEventListener('click', () => {
+            const expectedState = localStorage.getItem('supabase-auth-state') || 
+                                  sessionStorage.getItem('supabase-auth-state');
+            const returnedState = expectedState; // In a successful scenario, these match
+            
+            let result = '';
+            if (expectedState && returnedState && expectedState === returnedState) {
+                result = `<span class="success">✅ OAuth callback successful!</span>\n` +
+                         `Expected state: ${expectedState}\n` +
+                         `Returned state: ${returnedState}\n` +
+                         `States match: true`;
+                
+                // Clean up as in the AuthCallback.tsx
+                localStorage.removeItem('supabase-auth-state');
+                sessionStorage.removeItem('supabase-auth-state');
+                sessionStorage.removeItem('oauth-initiated-at');
+            } else {
+                result = `<span class="error">❌ OAuth callback error!</span>\n` +
+                         `Expected state: ${expectedState || 'Not set'}\n` +
+                         `Returned state: ${returnedState || 'Not set'}\n` +
+                         `States match: ${expectedState === returnedState}`;
+            }
+            
+            document.getElementById('oauthResult').innerHTML = result;
+        });
+
+        document.getElementById('simulateError').addEventListener('click', () => {
+            const expectedState = localStorage.getItem('supabase-auth-state') || 
+                                  sessionStorage.getItem('supabase-auth-state');
+            const returnedState = "different-state-value"; // Simulate state mismatch
+            
+            let result = `<span class="error">❌ OAuth state mismatch!</span>\n` +
+                       `Expected state: ${expectedState || 'Not set'}\n` +
+                       `Returned state: ${returnedState}\n` +
+                       `States match: false`;
+            
+            // Added resilient handling as in our fixes
+            if (expectedState) {
+                result += `\n\n<span class="info">ℹ️ Attempting to recover...</span>\n` +
+                          `Clearing stale state and proceeding with authentication.`;
+                localStorage.removeItem('supabase-auth-state');
+                sessionStorage.removeItem('supabase-auth-state');
+                sessionStorage.removeItem('oauth-initiated-at');
+            }
+            
+            document.getElementById('oauthResult').innerHTML = result;
+        });
+
+        // Check storage
+        document.getElementById('checkStorage').addEventListener('click', () => {
+            const localState = localStorage.getItem('supabase-auth-state');
+            const sessionState = sessionStorage.getItem('supabase-auth-state');
+            const timestamp = sessionStorage.getItem('oauth-initiated-at');
+            
+            let result = `<strong>localStorage:</strong>\n`;
+            result += `supabase-auth-state: ${localState || 'Not set'}\n\n`;
+            
+            result += `<strong>sessionStorage:</strong>\n`;
+            result += `supabase-auth-state: ${sessionState || 'Not set'}\n`;
+            result += `oauth-initiated-at: ${timestamp ? timestamp + ` (${new Date(parseInt(timestamp)).toLocaleTimeString()})` : 'Not set'}`;
+            
+            document.getElementById('storageResult').innerHTML = result;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "private":  true,
+    "name":  "checkresumeai-root",
+    "version":  "1.0.0",
+    "type":  "module",
+    "scripts":  {
+                    "build":  "cd project \u0026\u0026 npm run build",
+                    "vercel-build":  "cd project \u0026\u0026 node scripts/simple-vercel-build.js",
+                    "optimized-vercel-build":  "cd project \u0026\u0026 node scripts/simple-vercel-build.js",
+                    "start":  "cd project \u0026\u0026 npm start",
+                    "dev":  "cd project \u0026\u0026 npm run dev",
+                    "setup-pdf-worker":  "cd project \u0026\u0026 npm run setup-pdf-worker",
+                    "render-build": "bash render-build.sh",
+                    "render-build-js": "cd project \u0026\u0026 node scripts/render-build.js"
+                }
+}

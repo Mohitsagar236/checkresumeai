@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Navigation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Get Started Button Direct Navigation Test</h1>
+    <p>Testing if the issue is with the browser or the application.</p>
+
+    <div>
+        <h3>📍 Direct Route Tests</h3>
+        <p>These buttons will test if the routes work when accessed directly:</p>
+        
+        <button class="test-button" onclick="testRoute('http://localhost:5178/upload')">
+            Test /upload (Main Get Started)
+        </button>
+        
+        <button class="test-button" onclick="testRoute('http://localhost:5178/pricing')">
+            Test /pricing (Navigation Get Started)
+        </button>
+        
+        <button class="test-button" onclick="testRoute('http://localhost:5178/signup')">
+            Test /signup (Header Get Started)
+        </button>
+        
+        <button class="test-button" onclick="testHomepage()">
+            Test Homepage
+        </button>
+    </div>
+
+    <div>
+        <h3>🔄 Alternative Navigation Methods</h3>
+        <button class="test-button" onclick="testProgrammaticNavigation()">
+            Test Programmatic Navigation
+        </button>
+        
+        <button class="test-button" onclick="testWithDelay()">
+            Test with Delay
+        </button>
+        
+        <button class="test-button" onclick="testInCurrentWindow()">
+            Test in Current Window
+        </button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        function addResult(type, message) {
+            const results = document.getElementById('results');
+            const result = document.createElement('div');
+            result.className = `result ${type}`;
+            result.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            results.appendChild(result);
+            
+            // Scroll to bottom
+            result.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function testRoute(url) {
+            addResult('info', `Testing route: ${url}`);
+            
+            try {
+                const newWindow = window.open(url, '_blank', 'width=1200,height=800');
+                if (newWindow) {
+                    addResult('success', `✅ Successfully opened: ${url}`);
+                    
+                    // Check if window closes immediately (might indicate an error)
+                    setTimeout(() => {
+                        if (newWindow.closed) {
+                            addResult('error', `❌ Window closed immediately for: ${url}`);
+                        } else {
+                            addResult('success', `✅ Window still open for: ${url}`);
+                            // Auto-close after 5 seconds
+                            setTimeout(() => {
+                                if (!newWindow.closed) {
+                                    newWindow.close();
+                                    addResult('info', `🔄 Auto-closed window for: ${url}`);
+                                }
+                            }, 5000);
+                        }
+                    }, 1000);
+                } else {
+                    addResult('error', `❌ Failed to open window (popup blocked?): ${url}`);
+                }
+            } catch (error) {
+                addResult('error', `❌ Error opening ${url}: ${error.message}`);
+            }
+        }
+
+        function testHomepage() {
+            testRoute('http://localhost:5178/');
+        }
+
+        function testProgrammaticNavigation() {
+            addResult('info', 'Testing programmatic navigation...');
+            
+            // Test using fetch to see if the route responds
+            fetch('http://localhost:5178/upload')
+                .then(response => {
+                    if (response.ok) {
+                        addResult('success', '✅ /upload route responds to fetch');
+                        return response.text();
+                    } else {
+                        throw new Error(`Status: ${response.status}`);
+                    }
+                })
+                .then(html => {
+                    if (html.includes('Upload') || html.includes('React')) {
+                        addResult('success', '✅ Upload page content detected');
+                    } else {
+                        addResult('error', '❌ Unexpected content in upload page');
+                    }
+                })
+                .catch(error => {
+                    addResult('error', `❌ Fetch failed: ${error.message}`);
+                });
+        }
+
+        function testWithDelay() {
+            addResult('info', 'Testing navigation with delay...');
+            
+            setTimeout(() => {
+                testRoute('http://localhost:5178/upload');
+            }, 1000);
+        }
+
+        function testInCurrentWindow() {
+            if (confirm('This will navigate away from this test page. Continue?')) {
+                addResult('info', 'Navigating in current window...');
+                window.location.href = 'http://localhost:5178/upload';
+            }
+        }
+
+        // Auto-run initial test
+        window.onload = () => {
+            addResult('info', '🚀 Direct navigation test initialized');
+            addResult('info', '📋 Click the buttons above to test different navigation methods');
+            
+            // Test basic connectivity
+            fetch('http://localhost:5178/')
+                .then(response => {
+                    if (response.ok) {
+                        addResult('success', '✅ Application server is reachable');
+                    } else {
+                        addResult('error', `❌ Server error: ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    addResult('error', `❌ Cannot reach application: ${error.message}`);
+                });
+        };
+    </script>
+</body>
+</html>
