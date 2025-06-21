@@ -1,7 +1,0 @@
-# Railway Deployment - Backend Only Approach
-# This moves everything to backend-focused deployment
-
-# Move to backend directory for all operations
-cd backend
-
-# This is now the root of our Railway deployment
