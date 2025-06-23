@@ -1,46 +1,19 @@
 branch-defaults:
   main:
-    environment: CheckResumeAI-env
+    environment: null
     group_suffix: null
-
 global:
   application_name: CheckResumeAI
   branch: null
   default_ec2_keyname: null
-  default_platform: Node.js 18
-  default_region: us-east-1
+  default_platform: Node.js 20
+  default_region: ap-south-1
   include_git_submodules: true
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: eb-cli
+  profile: null
   repository: null
-  sc: git
+  sc: null
   workspace_type: Application
-
-deploy:
-  artifact: ./build.zip
-
-environment-defaults:
-  CheckResumeAI-env:
-    branch: null
-    repository: null
-
-option_settings:
-  aws:elasticbeanstalk:container:nodejs:
-    NodeVersion: 18.18.0
-  aws:elasticbeanstalk:environment:
-    EnvironmentType: SingleInstance
-    ServiceRole: aws-elasticbeanstalk-service-role
-  aws:autoscaling:launchconfiguration:
-    InstanceType: t2.micro
-    EC2KeyName: aws-eb
-    IamInstanceProfile: aws-elasticbeanstalk-ec2-role
-  aws:elasticbeanstalk:application:environment:
-    NODE_ENV: production
-    S3_BUCKET: checkresumeai-storage
-    RDS_HOSTNAME: ${RDS_HOSTNAME}
-    RDS_PORT: ${RDS_PORT}
-    RDS_DB_NAME: ${RDS_DB_NAME}
-    RDS_USERNAME: ${RDS_USERNAME}
-    RDS_PASSWORD: ${RDS_PASSWORD}
+  S3_BUCKET: make_bucket: checkresumeai-storage-782935996 checkresumeai-storage-782935996
