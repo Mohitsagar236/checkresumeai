@@ -315,4 +315,3 @@ router.post('/cleanup', asyncHandler(async (req, res) => {
     });
 }));
 export default router;
-//# sourceMappingURL=upload.js.map

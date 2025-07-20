@@ -203,4 +203,3 @@ router.put('/preferences', asyncHandler(async (req, res) => {
     });
 }));
 export default router;
-//# sourceMappingURL=profile.js.map

@@ -33,73 +33,69 @@ export const asyncHandler = (fn) => {
     };
 };
 export class ValidationError extends Error {
-    details;
-    statusCode = 400;
-    code = 'VALIDATION_ERROR';
     constructor(message, details) {
         super(message);
         this.details = details;
+        this.statusCode = 400;
+        this.code = 'VALIDATION_ERROR';
         this.name = 'ValidationError';
     }
 }
 export class AuthenticationError extends Error {
-    statusCode = 401;
-    code = 'AUTHENTICATION_ERROR';
     constructor(message = 'Authentication required') {
         super(message);
+        this.statusCode = 401;
+        this.code = 'AUTHENTICATION_ERROR';
         this.name = 'AuthenticationError';
     }
 }
 export class AuthorizationError extends Error {
-    statusCode = 403;
-    code = 'AUTHORIZATION_ERROR';
     constructor(message = 'Access denied') {
         super(message);
+        this.statusCode = 403;
+        this.code = 'AUTHORIZATION_ERROR';
         this.name = 'AuthorizationError';
     }
 }
 export class NotFoundError extends Error {
-    statusCode = 404;
-    code = 'NOT_FOUND';
     constructor(message = 'Resource not found') {
         super(message);
+        this.statusCode = 404;
+        this.code = 'NOT_FOUND';
         this.name = 'NotFoundError';
     }
 }
 export class ConflictError extends Error {
-    statusCode = 409;
-    code = 'CONFLICT';
     constructor(message = 'Resource conflict') {
         super(message);
+        this.statusCode = 409;
+        this.code = 'CONFLICT';
         this.name = 'ConflictError';
     }
 }
 export class RateLimitError extends Error {
-    statusCode = 429;
-    code = 'RATE_LIMIT_EXCEEDED';
     constructor(message = 'Rate limit exceeded') {
         super(message);
+        this.statusCode = 429;
+        this.code = 'RATE_LIMIT_EXCEEDED';
         this.name = 'RateLimitError';
     }
 }
 export class ExternalServiceError extends Error {
-    service;
-    statusCode = 502;
-    code = 'EXTERNAL_SERVICE_ERROR';
     constructor(message, service) {
         super(message);
         this.service = service;
+        this.statusCode = 502;
+        this.code = 'EXTERNAL_SERVICE_ERROR';
         this.name = 'ExternalServiceError';
     }
 }
 export class PaymentError extends Error {
-    details;
-    statusCode = 402;
-    code = 'PAYMENT_ERROR';
     constructor(message, details) {
         super(message);
         this.details = details;
+        this.statusCode = 402;
+        this.code = 'PAYMENT_ERROR';
         this.name = 'PaymentError';
     }
 }
-//# sourceMappingURL=errorHandler.js.map

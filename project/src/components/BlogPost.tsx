@@ -1,5 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 interface BlogPostProps {
   title: string;
@@ -24,6 +26,18 @@ const BlogPost: React.FC<BlogPostProps> = ({
   featuredImage,
   children
 }) => {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    // Check if there's a history to go back to
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      // Fallback to blog page or home
+      navigate('/blog');
+    }
+  };
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -91,7 +105,20 @@ const BlogPost: React.FC<BlogPostProps> = ({
         </script>
       </Helmet>
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Back Button - More Prominent and Visible */}
+        <div className="mb-8">
+          <button
+            onClick={handleBackClick}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-lg shadow-lg border-2 border-blue-700 dark:border-blue-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 hover:scale-105"
+            aria-label="Go back to previous page"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>← Back</span>
+          </button>
+        </div>
+        
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {title}

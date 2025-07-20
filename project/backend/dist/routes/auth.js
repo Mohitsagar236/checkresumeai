@@ -6,6 +6,7 @@ import { supabase, supabaseAdmin } from '../config/database.js';
 import { logger } from '../utils/logger.js';
 import { ValidationError, AuthenticationError, ConflictError } from '../middleware/errorHandler.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import emailService from '../utils/emailService.js';
 const router = Router();
 router.post('/register', asyncHandler(async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
@@ -64,6 +65,7 @@ router.post('/register', asyncHandler(async (req, res) => {
         role: profile.role,
     }, config.jwt.secret, { expiresIn: config.jwt.expiresIn });
     logger.info(`New user registered: ${email}`);
+    await emailService.sendWelcomeEmail(email.toLowerCase(), firstName);
     res.status(201).json({
         message: 'User registered successfully',
         user: {
@@ -183,7 +185,7 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
     }
     const { data: user } = await supabase
         .from('profiles')
-        .select('id')
+        .select('id, first_name')
         .eq('email', email.toLowerCase())
         .single();
     if (!user) {
@@ -192,11 +194,15 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
         });
         return;
     }
-    const { error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase(), {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase(), {
         redirectTo: `${process.env.FRONTEND_URL}/reset-password`,
     });
     if (error) {
         logger.error('Password reset error:', error);
+    }
+    else {
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent('SUPABASE_TOKEN')}`;
+        await emailService.sendPasswordResetEmail(email.toLowerCase(), resetLink);
     }
     logger.info(`Password reset requested for: ${email}`);
     res.json({
@@ -233,4 +239,3 @@ router.post('/verify-email', asyncHandler(async (req, res) => {
     });
 }));
 export default router;
-//# sourceMappingURL=auth.js.map

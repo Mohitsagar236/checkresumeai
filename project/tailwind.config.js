@@ -158,6 +158,20 @@ export default {
         '3/4': '75%',
         'full': '100%',
       },
+      perspective: {
+        'none': 'none',
+        '250': '250px',
+        '500': '500px',
+        '750': '750px',
+        '1000': '1000px',
+        '1200': '1200px',
+        '1500': '1500px',
+      },
+      transformOrigin: {
+        'center-3d': 'center center -50px',
+        'top-3d': 'top center -50px',
+        'bottom-3d': 'bottom center -50px',
+      },
     },
   },
   plugins: [

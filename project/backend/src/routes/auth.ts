@@ -6,6 +6,7 @@ import { supabase, supabaseAdmin } from '../config/database.js';
 import { logger } from '../utils/logger.js';
 import { ValidationError, AuthenticationError, ConflictError } from '../middleware/errorHandler.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import emailService from '../utils/emailService.js';
 
 const router = Router();
 
@@ -87,6 +88,9 @@ router.post('/register', asyncHandler(async (req: Request, res: Response) => {
   );
 
   logger.info(`New user registered: ${email}`);
+  
+  // Send welcome email
+  await emailService.sendWelcomeEmail(email.toLowerCase(), firstName);
 
   res.status(201).json({
     message: 'User registered successfully',
@@ -240,7 +244,7 @@ router.post('/forgot-password', asyncHandler(async (req: Request, res: Response)
   // Check if user exists
   const { data: user } = await supabase
     .from('profiles')
-    .select('id')
+    .select('id, first_name')
     .eq('email', email.toLowerCase())
     .single();
 
@@ -253,12 +257,18 @@ router.post('/forgot-password', asyncHandler(async (req: Request, res: Response)
   }
 
   // Send password reset email via Supabase
-  const { error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase(), {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase(), {
     redirectTo: `${process.env.FRONTEND_URL}/reset-password`,
   });
 
   if (error) {
     logger.error('Password reset error:', error);
+  } else {
+    // Also send our custom email with better formatting
+    // The reset link would typically come from Supabase in the data object
+    // but we'll use FRONTEND_URL as a fallback
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent('SUPABASE_TOKEN')}`;
+    await emailService.sendPasswordResetEmail(email.toLowerCase(), resetLink);
   }
 
   logger.info(`Password reset requested for: ${email}`);

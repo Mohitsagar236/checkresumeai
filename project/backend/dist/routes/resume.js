@@ -266,4 +266,3 @@ router.post('/batch-analyze', premiumMiddleware, upload.array('resumes', 5), asy
     });
 }));
 export default router;
-//# sourceMappingURL=resume.js.map

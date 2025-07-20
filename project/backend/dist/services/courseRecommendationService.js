@@ -286,4 +286,3 @@ const generateReasons = (course, targetSkills, analysisData) => {
     }
     return reasons.slice(0, 3);
 };
-//# sourceMappingURL=courseRecommendationService.js.map

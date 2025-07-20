@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export function TermsOfServicePage() {
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-neutral-100">
+    <div className="min-h-screen pt-28 pb-16 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 text-gray-900 dark:text-neutral-100">
       <div className="container mx-auto px-4 md:px-6 space-y-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}

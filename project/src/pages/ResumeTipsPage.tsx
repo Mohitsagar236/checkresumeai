@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 
 export function ResumeTipsPage() {
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-neutral-100">
+    <div className="min-h-screen pt-28 pb-16 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-neutral-100">
       <div className="container mx-auto px-4 md:px-6 space-y-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Resume Writing Tips</h1>
         { [

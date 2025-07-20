@@ -93,6 +93,16 @@ export function Header() {
                 Analyze Resume
               </Link>
               <Link 
+                to="/master" 
+                className={`text-sm font-medium hover:text-blue-600 ${
+                  location.pathname === '/master'
+                    ? 'text-blue-600'
+                    : 'text-gray-700 dark:text-gray-200'
+                }`}
+              >
+                Master CV
+              </Link>
+              <Link 
                 to="/pricing" 
                 className={`text-sm font-medium hover:text-blue-600 ${
                   location.pathname === '/pricing'
@@ -189,6 +199,14 @@ export function Header() {
                 }`}
               >
                 Analyze Resume
+              </Link>
+              <Link 
+                to="/master" 
+                className={`text-sm font-medium hover:text-blue-600 transition-colors ${
+                  location.pathname === '/master' ? 'text-blue-600' : 'text-gray-700 dark:text-gray-200'
+                }`}
+              >
+                Master CV
               </Link>
               <Link 
                 to="/pricing" 

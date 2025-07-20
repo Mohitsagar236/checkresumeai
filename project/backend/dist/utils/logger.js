@@ -34,4 +34,3 @@ if (!existsSync(logsDir)) {
     mkdirSync(logsDir, { recursive: true });
 }
 export default logger;
-//# sourceMappingURL=logger.js.map

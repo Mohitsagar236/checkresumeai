@@ -17,6 +17,7 @@ const ResumeCheckPage = lazy(() => import('./pages/ResumeCheckPage'));
 const ResumeAnalysisPage = lazy(() => import('./pages/ResumeAnalysisPage'));
 const ResultsPage = lazy(() => import('./pages/ResultsPage'));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
+const MasterCVPage = lazy(() => import('./pages/MasterCVPage'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const ProfilePage = lazy(() => import('./pages/ProfilePageImproved'));
 
@@ -69,6 +70,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <UploadPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/master',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <MasterCVPage />
           </Suspense>
         ),
       },
@@ -227,6 +236,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <ResumeKeywords2025 />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/blog/powered-insights-2025',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <CompleteGuideResumeAnalysis />
           </Suspense>
         ),
       },

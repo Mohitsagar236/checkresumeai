@@ -1,6 +1,7 @@
 import { ArrowUpRight, CheckCircle2, Code, FileBarChart2, FileSearch, Layers, LayoutGrid, MoveUpRight, ShieldCheck, Star } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { useState } from "react";
+import { CountdownTimer } from "../ui/CountdownTimer";
 
 interface FeatureCardProps {
   title: string;
@@ -209,17 +210,10 @@ export function AdvancedFeaturesSection() {
                 </div>
                 
                 <div className="text-right ml-2 relative">
-                  <div className="text-amber-300 font-bold text-xs flex">
-                    <div className="flex flex-col items-center justify-center w-6 h-6 bg-amber-950/30 rounded-md mx-0.5">
-                      <span>2d</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-6 h-6 bg-amber-950/30 rounded-md mx-0.5">
-                      <span>8h</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-6 h-6 bg-amber-950/30 rounded-md mx-0.5">
-                      <span>45m</span>
-                    </div>
-                  </div>
+                  <CountdownTimer 
+                    targetDate={new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)}
+                    onExpire={() => console.log('Limited time offer expired')}
+                  />
                 </div>
               </div>
               

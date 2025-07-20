@@ -178,7 +178,7 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   if (authLoading || dashboardLoading) {
     console.log('⏳ Loading authentication data...');
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
+      <div className="min-h-screen pt-36 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <Card className="border-0 shadow-lg dark:shadow-slate-900/50">
@@ -217,7 +217,7 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   // Debug component for production troubleshooting
   if (showDebug && debugInfo) {
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
+      <div className="min-h-screen pt-36 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
         <div className="container mx-auto px-4 md:px-6">
           <Card className="mb-8">
             <CardHeader>
@@ -281,7 +281,7 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   if (!user) {
     console.log('User not authenticated, showing login prompt');
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
+      <div className="min-h-screen pt-36 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <Card className="border-0 shadow-lg dark:shadow-slate-900/50">
@@ -319,7 +319,7 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   if (!isPremium) {
     console.log('User is not premium, showing upgrade screen');
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
+      <div className="min-h-screen pt-36 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Premium Analytics Header */}
@@ -488,7 +488,7 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   }
   // Premium users get the full dashboard
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
+    <div className="min-h-screen pt-36 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-6">

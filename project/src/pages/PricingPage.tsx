@@ -13,7 +13,7 @@ export function PricingPage() {
   const { tier, upgradeToFreemium, openPaymentModal } = useSubscription();
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-900/95 text-gray-900 dark:text-neutral-100">
+    <div className="min-h-screen pt-36 pb-16 bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-900/95 text-gray-900 dark:text-neutral-100">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="relative z-10 text-center mb-16">
@@ -749,7 +749,11 @@ export function PricingPage() {
 
               <div className="flex flex-col sm:flex-row justify-center gap-6">
                 <Link to="/upload">
-                  <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 w-full sm:w-auto shadow-lg hover:shadow-xl dark:shadow-blue-900/30 dark:hover:shadow-blue-900/40 transition-all transform hover:-translate-y-1">
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="!bg-white !text-blue-700 hover:!bg-blue-50 hover:!text-blue-800 w-full sm:w-auto shadow-lg hover:shadow-xl dark:shadow-blue-900/30 dark:hover:shadow-blue-900/40 transition-all transform hover:-translate-y-1 !border-blue-200 dark:!bg-slate-800 dark:!text-blue-400 dark:hover:!bg-slate-700 dark:!border-blue-600"
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>

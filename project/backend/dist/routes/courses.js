@@ -263,4 +263,3 @@ router.get('/categories', (req, res) => {
     });
 });
 export default router;
-//# sourceMappingURL=courses.js.map

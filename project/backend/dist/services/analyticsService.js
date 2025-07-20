@@ -232,4 +232,3 @@ export const generateAnalyticsInsights = async (userId) => {
         return [];
     }
 };
-//# sourceMappingURL=analyticsService.js.map

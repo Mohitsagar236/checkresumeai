@@ -6,7 +6,7 @@ global:
   application_name: CheckResumeAI
   branch: null
   default_ec2_keyname: null
-  default_platform: Node.js 20
+  default_platform: Node.js 22
   default_region: ap-south-1
   include_git_submodules: true
   instance_profile: null
@@ -16,4 +16,5 @@ global:
   repository: null
   sc: null
   workspace_type: Application
-  S3_BUCKET: make_bucket: checkresumeai-storage-782935996 checkresumeai-storage-782935996
+
+S3_BUCKET: checkresumeai-storage-2032721591

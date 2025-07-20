@@ -164,4 +164,3 @@ export const optionalAuthMiddleware = async (req, res, next) => {
         next();
     }
 };
-//# sourceMappingURL=auth.js.map

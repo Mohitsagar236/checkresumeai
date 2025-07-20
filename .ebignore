@@ -1,37 +1,12 @@
-# Git directories
-.git/
-.github/
-.gitignore
-.gitmodules
-
-# Development files
-node_modules/
-src/
-scripts/
-.*
-*.md
-*.patch
-*.ps1
-*.bat
-*.mjs
-*.js.map
-*.ts.map
-*.log
-
-# Exclude build files we don't need
-build/node_modules/
-build/*.map
-project/src/
+﻿node_modules/
 project/node_modules/
-project/scripts/
-
-# AWS configuration (already stored in AWS)
-cloudformation-template.yml
-
-# Keep these files
-!.elasticbeanstalk/
-!.ebignore
-!build.zip
-!package.json
-!package-lock.json
-!Procfile
+project/backend/node_modules/
+.env*
+.git/
+.vscode/
+*.log
+*.md
+*.txt
+*.zip
+.DS_Store
+Thumbs.db

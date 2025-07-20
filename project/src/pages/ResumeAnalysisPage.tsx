@@ -90,7 +90,7 @@ export function ResumeAnalysisPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
+    <div className="min-h-screen pt-36 pb-16 bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-neutral-100">
       <div className="container mx-auto px-4 md:px-6">
         <ResumeAnalysisHero 
           onResumeUpload={handleResumeUpload}

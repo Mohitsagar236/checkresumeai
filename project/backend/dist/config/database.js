@@ -45,4 +45,3 @@ export const handleSupabaseResponse = (response) => {
     };
 };
 export default supabase;
-//# sourceMappingURL=database.js.map

@@ -145,6 +145,16 @@ export function HeaderWithAuth() {
               >
                 Analyze Resume
               </Link>
+              <Link 
+                to="/master" 
+                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 ${
+                  location.pathname === '/master'
+                    ? 'text-blue-400 dark:text-blue-600 font-semibold'
+                    : 'text-gray-300 dark:text-gray-800'
+                }`}
+              >
+                Master CV
+              </Link>
               {user && (
                 <Link 
                   to="/analytics"                  className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 flex items-center ${
@@ -294,6 +304,17 @@ export function HeaderWithAuth() {
               onClick={toggleMenu}
             >
               Analyze Resume
+            </Link>
+            <Link 
+              to="/master" 
+              className={`block text-lg font-luxury font-medium transition-colors duration-300 ${
+                location.pathname === '/master'
+                  ? 'text-blue-400 dark:text-blue-600'
+                  : 'text-gray-300 dark:text-gray-800 hover:text-blue-400 dark:hover:text-blue-600'
+              }`}
+              onClick={toggleMenu}
+            >
+              Master CV
             </Link>
             {user && (
               <Link 

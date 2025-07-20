@@ -7,9 +7,9 @@
         "dev": "node --max-http-header-size=32768 ./node_modules/vite/bin/vite.js",
         "dev:safe": "cross-env NODE_OPTIONS=\"--max-http-header-size=32768\" vite",
         "prebuild": "npm install",
-        "build": "node scripts/railway-build.js",
+        "build": "vite build --mode production --minify esbuild",
         "build:frontend": "vite build --mode production --minify esbuild",
-        "build:backend": "cd backend && npm install && npm run build",
+        "build:backend": "cd backend && npm install --include=dev && npm run build",
         "build:optimized": "GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true vite build --mode production --minify esbuild",
         "simple-vercel-build": "node scripts/simple-vercel-build.js",
         "render-build": "node scripts/render-build.js",
@@ -17,7 +17,8 @@
         "setup-pdf-worker": "echo 'Setting up PDF worker files...'",
         "vercel-build": "vite build --mode production --minify esbuild --emptyOutDir",
         "start": "cd backend && node dist/server.js",
-        "health-check": "node scripts/health-check.js"
+        "health-check": "node scripts/health-check.js",
+        "verify-build": "node scripts/verify-build.js"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.1.10",
@@ -39,6 +40,8 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "framer-motion": "^12.18.1",
+        "html2canvas": "^1.4.1",
+        "jspdf": "^3.0.1",
         "lodash": "^4.17.21",
         "lucide-react": "^0.516.0",
         "pdfjs-dist": "^5.3.31",
@@ -46,7 +49,9 @@
         "react-dom": "^19.1.0",
         "react-helmet-async": "^2.0.5",
         "react-router-dom": "^7.6.2",
+        "react-to-print": "^3.1.1",
         "recharts": "^2.15.3",
-        "tailwind-merge": "^3.3.1"
+        "tailwind-merge": "^3.3.1",
+        "zustand": "^5.0.6"
     }
 }

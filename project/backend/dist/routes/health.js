@@ -80,4 +80,3 @@ router.get('/live', (req, res) => {
     });
 });
 export default router;
-//# sourceMappingURL=health.js.map

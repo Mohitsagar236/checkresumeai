@@ -5,8 +5,24 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+    url: supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'missing'
+  });
   throw new Error('Missing Supabase environment variables');
 }
+
+// Validate Supabase URL format
+if (!supabaseUrl.startsWith('https://') || !supabaseUrl.includes('.supabase.co')) {
+  console.error('Invalid Supabase URL format:', supabaseUrl);
+  throw new Error('Invalid Supabase URL format');
+}
+
+console.log('✅ Supabase configuration loaded:', {
+  url: supabaseUrl.substring(0, 30) + '...',
+  hasKey: !!supabaseAnonKey
+});
 
 // Profile type definition
 interface CachedProfile {
@@ -111,23 +127,50 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     headers: { 
       'x-app': 'ra' // Much shorter header
     },
-    fetch: (url, options = {}) => {
-      // Remove potentially large headers that might cause 431 errors
-      const cleanOptions = { ...options };
-      if (cleanOptions.headers) {
-        const headers = cleanOptions.headers as Record<string, string>;
-        // Remove or truncate large headers
-        Object.keys(headers).forEach(key => {
-          if (headers[key] && headers[key].length > 1024) {
-            delete headers[key];
-          }
+    fetch: async (url, options = {}) => {
+      try {
+        // Log fetch attempts for debugging
+        const urlString = typeof url === 'string' ? url : url.toString();
+        console.debug('🌐 Supabase fetch:', urlString.substring(0, 50) + '...');
+        
+        // Remove potentially large headers that might cause 431 errors
+        const cleanOptions = { ...options };
+        if (cleanOptions.headers) {
+          const headers = cleanOptions.headers as Record<string, string>;
+          // Remove or truncate large headers
+          Object.keys(headers).forEach(key => {
+            if (headers[key] && headers[key].length > 1024) {
+              delete headers[key];
+            }
+          });
+        }
+        
+        const response = await fetch(url, {
+          ...cleanOptions,
+          signal: AbortSignal.timeout(10000)
         });
+        
+        if (!response.ok) {
+          console.warn(`🚨 Supabase fetch failed: ${response.status} ${response.statusText}`);
+        }
+        
+        return response;
+      } catch (error) {
+        const urlString = typeof url === 'string' ? url : url.toString();
+        console.error('🚨 Supabase fetch error:', {
+          url: urlString.substring(0, 50) + '...',
+          error: error instanceof Error ? error.message : String(error),
+          type: error instanceof TypeError ? 'Network Error' : 'Unknown Error'
+        });
+        
+        // For network errors, provide helpful guidance
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          console.error('💡 This might be a network connectivity issue or incorrect Supabase URL');
+          console.error('💡 Please check your internet connection and Supabase configuration');
+        }
+        
+        throw error;
       }
-      
-      return fetch(url, {
-        ...cleanOptions,
-        signal: AbortSignal.timeout(10000)
-      });
     }
   },
   db: {

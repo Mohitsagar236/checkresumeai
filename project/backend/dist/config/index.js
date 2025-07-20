@@ -1,5 +1,9 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import { config as dotenvConfig } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'node:path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenvConfig({ path: join(__dirname, '../../.env') });
 export const config = {
     server: {
         port: parseInt(process.env.PORT || '5000'),
@@ -99,4 +103,3 @@ if (missingEnvVars.length > 0) {
     throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
 }
 export default config;
-//# sourceMappingURL=index.js.map

@@ -255,7 +255,7 @@ export function UploadPage() {
   }, [file, jobRole, navigate, realTimeData, user, showToast, updateField]);
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 text-gray-900 dark:text-neutral-100">
+    <div className="min-h-screen pt-36 pb-16 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 text-gray-900 dark:text-neutral-100">
       {/* Premium background pattern */}
       <div className="absolute inset-0 bg-dot-pattern opacity-30 dark:opacity-10"></div>
       

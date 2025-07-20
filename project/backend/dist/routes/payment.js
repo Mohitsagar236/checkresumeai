@@ -346,4 +346,3 @@ router.post('/webhook', asyncHandler(async (req, res) => {
     res.json({ status: 'ok' });
 }));
 export default router;
-//# sourceMappingURL=payment.js.map

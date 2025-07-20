@@ -6,7 +6,7 @@ function fixEnvironmentVariables() {
   if (!window.__API_CONFIG__) {
     console.log('🛠 API config missing, adding fallback configuration');
     window.__API_CONFIG__ = {
-      SUPABASE_URL: 'https://gbmhfzoanmnayjvaxdfu.supabase.co',
+      SUPABASE_URL: 'https://rvmvahwyfptyhchlvtvr.supabase.co',
       SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdibWhmem9hbm1uYXlqdmF4ZGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkzOTAzNzAsImV4cCI6MjA2NDk2NjM3MH0.ShE9Pwab0gfWLvmzYAGqr5ejtDemWoN8y3g4HSyhVM4',
       VITE_USE_MOCK_API: true
     };

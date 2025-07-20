@@ -44,7 +44,7 @@ export function HomePage() {
     return (
     <div className="flex flex-col min-h-screen text-gray-900 dark:text-neutral-100 dark:bg-slate-950">
       {/* Hero Section */}
-      <section className="pt-20 lg:pt-24 pb-12 lg:pb-20 relative overflow-hidden">
+      <section className="pt-32 lg:pt-36 pb-12 lg:pb-20 relative overflow-hidden">
         {/* Decorative background elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-blue-50 dark:from-slate-800 dark:to-slate-900 -z-10"></div>
         <div className="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-white/[0.02] mix-blend-overlay -z-10"></div>

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import 3D Effects */
+@import './styles/3d-effects.css';
+
 /* Dark mode foundation */
 html {
   transition: color-scheme 0.3s ease;
@@ -877,3 +880,80 @@ body {
       width: 88%;
     }
   }
+  
+  /* Print styles to preserve dark mode */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Ensure dark backgrounds are preserved */
+  .bg-gray-900 {
+    background-color: #111827 !important;
+  }
+  
+  .bg-gray-800 {
+    background-color: #1f2937 !important;
+  }
+  
+  .bg-gray-700 {
+    background-color: #374151 !important;
+  }
+  
+  .bg-gray-600 {
+    background-color: #4b5563 !important;
+  }
+  
+  /* Ensure dark text colors are preserved */
+  .text-white {
+    color: #ffffff !important;
+  }
+  
+  .text-gray-100 {
+    color: #f3f4f6 !important;
+  }
+  
+  .text-gray-200 {
+    color: #e5e7eb !important;
+  }
+  
+  .text-gray-300 {
+    color: #d1d5db !important;
+  }
+  
+  .text-gray-400 {
+    color: #9ca3af !important;
+  }
+  
+  /* Ensure borders are preserved */
+  .border-gray-400 {
+    border-color: #9ca3af !important;
+  }
+  
+  .border-gray-500 {
+    border-color: #6b7280 !important;
+  }
+  
+  .border-gray-600 {
+    border-color: #4b5563 !important;
+  }
+  
+  .border-gray-700 {
+    border-color: #374151 !important;
+  }
+  
+  /* Preserve gradient backgrounds */
+  .bg-gradient-to-r {
+    -webkit-print-color-adjust: exact !important;
+  }
+}
+
+/* Ensure resume templates maintain dark mode in print */
+@media print {
+  [data-theme="dark"] {
+    background-color: #111827 !important;
+    color: #ffffff !important;
+  }
+}

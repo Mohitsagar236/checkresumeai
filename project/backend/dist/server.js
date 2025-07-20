@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
+import path from 'path';
 import authRoutes from './routes/auth.js';
 import resumeRoutes from './routes/resume.js';
 import analyticsRoutes from './routes/analytics.js';
@@ -15,6 +16,7 @@ import profileRoutes from './routes/profile.js';
 import courseRoutes from './routes/courses.js';
 import uploadRoutes from './routes/upload.js';
 import healthRoutes from './routes/health.js';
+import emailRoutes from './routes/email.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { authMiddleware } from './middleware/auth.js';
 import { logger } from './utils/logger.js';
@@ -73,11 +75,24 @@ const apiVersion = process.env.API_VERSION || 'v1';
 app.use(`/api/${apiVersion}/health`, healthRoutes);
 app.use(`/api/${apiVersion}/auth`, authRoutes);
 app.use(`/api/${apiVersion}/upload`, uploadRoutes);
+app.use(`/api/${apiVersion}/email`, emailRoutes);
 app.use(`/api/${apiVersion}/resume`, authMiddleware, resumeRoutes);
 app.use(`/api/${apiVersion}/analytics`, authMiddleware, analyticsRoutes);
 app.use(`/api/${apiVersion}/payment`, authMiddleware, paymentRoutes);
 app.use(`/api/${apiVersion}/profile`, authMiddleware, profileRoutes);
 app.use(`/api/${apiVersion}/courses`, authMiddleware, courseRoutes);
+if (process.env.NODE_ENV === 'production') {
+    const frontendBuildPath = path.join(__dirname, '../../frontend-build');
+    app.use(express.static(frontendBuildPath));
+    app.get('*', (req, res) => {
+        if (!req.path.startsWith('/api')) {
+            res.sendFile(path.join(frontendBuildPath, 'index.html'));
+        }
+        else {
+            res.status(404).json({ error: 'API endpoint not found' });
+        }
+    });
+}
 app.get('/', (req, res) => {
     res.json({
         message: 'CheckResumeAI Backend API',
@@ -85,6 +100,15 @@ app.get('/', (req, res) => {
         status: 'running',
         environment: process.env.NODE_ENV,
         timestamp: new Date().toISOString()
+    });
+});
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
+        uptime: process.uptime(),
+        memory: process.memoryUsage()
     });
 });
 io.on('connection', (socket) => {
@@ -133,13 +157,12 @@ process.on('SIGINT', () => {
         logger.info('Process terminated');
     });
 });
-const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || 'localhost';
-server.listen(PORT, () => {
+const PORT = parseInt(process.env.PORT || '5000', 10);
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : (process.env.HOST || 'localhost');
+server.listen(PORT, HOST, () => {
     logger.info(`🚀 Server running on http://${HOST}:${PORT}`);
     logger.info(`📚 API Documentation: http://${HOST}:${PORT}/api/${apiVersion}/health`);
     logger.info(`🌍 Environment: ${process.env.NODE_ENV}`);
     logger.info(`🔐 CORS enabled for: ${process.env.NODE_ENV === 'production' ? 'Production domains' : 'Development domains'}`);
 });
 export default app;
-//# sourceMappingURL=server.js.map

@@ -240,4 +240,3 @@ function convertToCSV(data) {
     return [headers, ...rows].join('\n');
 }
 export default router;
-//# sourceMappingURL=analytics.js.map

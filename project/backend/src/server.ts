@@ -18,6 +18,7 @@ import profileRoutes from './routes/profile.js';
 import courseRoutes from './routes/courses.js';
 import uploadRoutes from './routes/upload.js';
 import healthRoutes from './routes/health.js';
+import emailRoutes from './routes/email.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -98,6 +99,7 @@ const apiVersion = process.env.API_VERSION || 'v1';
 app.use(`/api/${apiVersion}/health`, healthRoutes);
 app.use(`/api/${apiVersion}/auth`, authRoutes);
 app.use(`/api/${apiVersion}/upload`, uploadRoutes);
+app.use(`/api/${apiVersion}/email`, emailRoutes);
 app.use(`/api/${apiVersion}/resume`, authMiddleware, resumeRoutes);
 app.use(`/api/${apiVersion}/analytics`, authMiddleware, analyticsRoutes);
 app.use(`/api/${apiVersion}/payment`, authMiddleware, paymentRoutes);
@@ -201,10 +203,10 @@ process.on('SIGINT', () => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || 'localhost';
+const PORT = parseInt(process.env.PORT || '5000', 10);
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : (process.env.HOST || 'localhost');
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   logger.info(`🚀 Server running on http://${HOST}:${PORT}`);
   logger.info(`📚 API Documentation: http://${HOST}:${PORT}/api/${apiVersion}/health`);
   logger.info(`🌍 Environment: ${process.env.NODE_ENV}`);
