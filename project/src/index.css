@@ -1,9 +1,7 @@
+@import './styles/3d-effects.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import 3D Effects */
-@import './styles/3d-effects.css';
 
 /* Dark mode foundation */
 html {
@@ -885,7 +883,6 @@ body {
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
-    color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
   
@@ -947,6 +944,7 @@ body {
   /* Preserve gradient backgrounds */
   .bg-gradient-to-r {
     -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
 

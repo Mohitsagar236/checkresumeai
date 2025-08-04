@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { BrandLogosSection } from "../components/sections/BrandLogosSection";
 import { StatsSection } from "../components/sections/StatsSection";
-import { AdvancedFeaturesSection } from "../components/sections/AdvancedFeaturesSection";
+import AdvancedFeaturesSection from "../components/sections/AdvancedFeaturesSection";
 import { EnhancedCTASection } from "../components/sections/EnhancedCTASection";
 import { TestimonialsSection } from "../components/sections/TestimonialsSection";
 
