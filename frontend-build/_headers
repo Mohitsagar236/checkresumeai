@@ -1,0 +1,81 @@
+# CSS files MIME type fix - HIGHEST PRIORITY
+/assets/*.css
+  Content-Type: text/css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.css
+  Content-Type: text/css
+  Cache-Control: public, max-age=3600
+
+# JavaScript files
+/assets/*.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.mjs
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Content-Type: application/javascript
+
+/*.mjs
+  Content-Type: application/javascript
+
+# JSON files
+/*.json
+  Content-Type: application/json
+
+# Font files
+/*.woff
+  Content-Type: font/woff
+
+/*.woff2
+  Content-Type: font/woff2
+
+/*.ttf
+  Content-Type: font/ttf
+
+/*.otf
+  Content-Type: font/otf
+
+# PDF files
+/*.pdf
+  Content-Type: application/pdf
+
+# Image files
+/*.png
+  Content-Type: image/png
+
+/*.jpg
+  Content-Type: image/jpeg
+
+/*.jpeg
+  Content-Type: image/jpeg
+
+/*.gif
+  Content-Type: image/gif
+
+/*.svg
+  Content-Type: image/svg+xml
+
+/*.webp
+  Content-Type: image/webp
+
+# PDF Worker specific files
+/pdf-worker/*
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=31536000
+
+# Static assets caching
+/assets/*
+  Cache-Control: public, max-age=31536000
+
+# Main CSS and JS
+/src/index.css
+  Content-Type: text/css
+  Cache-Control: public, max-age=3600
+
+/src/components/ui/grid-patterns.css
+  Content-Type: text/css
+  Cache-Control: public, max-age=3600

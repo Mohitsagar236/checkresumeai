@@ -1,0 +1,135 @@
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.premium-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 25%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  background-repeat: no-repeat;
+}
+
+.progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.progress-bar:hover .progress-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.progress-indicator {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.cursor-indicator {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 9999px;
+}
+
+/* Score ranges styling */
+.score-excellent {
+  background: linear-gradient(to right, #34d399, #10b981);
+  color: #064e3b;
+}
+
+/* Marker position classes */
+.marker-position-10 {
+  left: 10%;
+}
+
+.marker-position-20 {
+  left: 20%;
+}
+
+.marker-position-25 {
+  left: 25%;
+}
+
+.marker-position-30 {
+  left: 30%;
+}
+
+.marker-position-40 {
+  left: 40%;
+}
+
+.marker-position-50 {
+  left: 50%;
+}
+
+.marker-position-60 {
+  left: 60%;
+}
+
+.marker-position-65 {
+  left: 65%;
+}
+
+.marker-position-70 {
+  left: 70%;
+}
+
+.marker-position-75 {
+  left: 75%;
+}
+
+.marker-position-80 {
+  left: 80%;
+}
+
+.marker-position-85 {
+  left: 85%;
+}
+
+.marker-position-90 {
+  left: 90%;
+}
+
+/* Additional utility classes for positioning */
+.progress-amber-fill {
+  @apply absolute bottom-0 left-0 right-0 bg-amber-500 rounded-t-md;
+}
+
+.progress-gray-fill {
+  @apply absolute bottom-0 left-0 right-0 bg-gray-400 rounded-t-md;
+}
+
+.progress-violet-fill {
+  @apply absolute top-0 left-0 h-full bg-gradient-to-r from-violet-400 to-violet-600;
+}
+
+.progress-overlay {
+  @apply absolute top-0 left-0 h-full w-full flex items-center justify-center;
+}
+
+.score-good {
+  background: linear-gradient(to right, #60a5fa, #3b82f6);
+  color: #1e40af;
+}
+
+.score-needs-work {
+  background: linear-gradient(to right, #f87171, #ef4444);
+  color: #991b1b;
+}
+
+/* Premium background patterns */
+.premium-bg-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
