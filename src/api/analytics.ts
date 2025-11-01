@@ -270,7 +270,9 @@ export function generateMockAnalyticsData(userId: string): UserAnalytics {
   
   // Generate course recommendations based on user ID to ensure consistency
   // This ensures different users get personalized mock recommendations
-  const userSeed = parseInt(userId.replace(/[^0-9]/g, '0'), 10) % 5;
+  // Handle undefined userId gracefully
+  const safeUserId = userId || 'guest-user';
+  const userSeed = parseInt(safeUserId.replace(/[^0-9]/g, '0'), 10) % 5;
   
   // List of possible course recommendations
   const courseRecommendationsList = [

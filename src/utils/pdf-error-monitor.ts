@@ -41,6 +41,13 @@ export function installPdfErrorMonitor(): void {
   console.error = function(...args: unknown[]) {
     const errorMessage = args.map(arg => String(arg)).join(" ");
     
+    // Suppress Firebase auth user cancellation errors (these are normal user actions)
+    if (errorMessage.includes("auth/popup-closed-by-user") || 
+        errorMessage.includes("popup-closed-by-user")) {
+      console.log("ℹ️ User cancelled sign-in popup");
+      return; // Don't log these as errors
+    }
+    
     // Check for known PDF.js worker errors
     if (errorMessage.includes("Cannot resolve callback") || 
         errorMessage.includes("sendWithPromise") ||

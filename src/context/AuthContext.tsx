@@ -4,10 +4,17 @@ import {
   supabase, 
   handleSupabaseError, 
   retryOperation,
-  clearProfileCache,
-  getValidSession
+  clearProfileCache
 } from '../utils/supabaseClient';
-import type { Session, User, PostgrestSingleResponse } from '@supabase/supabase-js';
+import type { PostgrestSingleResponse } from '@supabase/supabase-js';
+import { 
+  onAuthChange, 
+  signIn as firebaseSignIn, 
+  signUp as firebaseSignUp, 
+  signOut as firebaseSignOut,
+  signInWithOAuthProvider,
+  handleOAuthRedirect
+} from '../utils/firebaseClient';
 
 interface Profile {
   id: string;
@@ -53,137 +60,88 @@ const createUserProfile = async (userId: string, email: string | undefined, name
   }
 };
 
-// Smart redirect URL detection for different environments
-const getRedirectUrl = () => {
-  // If explicitly set in environment, use that (highest priority)
-  if (import.meta.env.VITE_REDIRECT_URL) {
-    console.log('Using explicit redirect URL from env:', import.meta.env.VITE_REDIRECT_URL);
-    return import.meta.env.VITE_REDIRECT_URL;
-  }
-  
-  // For local development (detect if we're on localhost but ensure port consistency)
-  if (import.meta.env.DEV || window.location.hostname === 'localhost') {
-    // Extract port from current URL or default to 3000 (for consistency with error)
-    const port = window.location.port || '3000';
-    const redirectUrl = `http://localhost:${port}/auth/callback`;
-    console.log('Using development redirect URL:', redirectUrl);
-    return redirectUrl;
-  }
-  
-  // For production (use current origin)
-  const productionUrl = `${window.location.origin}/auth/callback`;
-  console.log('Using production redirect URL:', productionUrl);
-  return productionUrl;
-};
-
-const REDIRECT_URL = getRedirectUrl();
-
 // Provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<any | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasInitialized, setHasInitialized] = useState(false);
   
   useEffect(() => {
-    // Immediately get and set session with clock skew protection
-    const initializeSession = async () => {
+    // Initialize Firebase and check for OAuth redirect
+    const initializeAuth = async () => {
       setIsLoading(true);
       try {
-        // Use the enhanced session getter that handles clock skew
-        const { session, error: sessionError } = await getValidSession();
+        // Check if returning from OAuth redirect
+        const { user: redirectUser, error: redirectError } = await handleOAuthRedirect();
         
-        if (sessionError) {
-          console.warn('Session retrieval error (may be expected on first load):', sessionError);
-          // Handle clock skew specific errors
-          if (sessionError instanceof Error && 
-              (sessionError.message?.includes('issued in the future') || sessionError.message?.includes('clock skew'))) {
-            console.warn('Clock skew detected during session initialization');
-          }
-          // Don't throw error for 401 on initial session load
-          if (sessionError instanceof Error && 
-              (sessionError.message?.includes('401') || sessionError.message?.includes('Unauthorized'))) {
-            console.log('No active session found - user needs to sign in');
-          }
+        if (redirectError) {
+          console.error('OAuth redirect error:', redirectError);
         }
         
-        setSession(session);
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        
-        // If user exists, get or create profile efficiently
-        if (currentUser) {
+        if (redirectUser) {
+          console.log('✅ OAuth redirect successful, user:', redirectUser.email);
+          setUser(redirectUser);
+          
+          // Create/update profile
           const profileResult = await createUserProfile(
-            currentUser.id,
-            currentUser.email,
-            currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || ''
+            redirectUser.uid,
+            redirectUser.email ?? '',
+            redirectUser.displayName || ''
           );
           
           if (profileResult.success && profileResult.profile) {
             setUserProfile(profileResult.profile);
-          } else {
-            // Fallback: try to get existing profile
-            const { data: existingProfile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', currentUser.id)
-              .single();
-            
-            if (existingProfile) {
-              setUserProfile(existingProfile);
-            }
           }
         }
       } catch (error) {
-        console.error('Session initialization error:', error);
+        console.error('Auth initialization error:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    initializeSession();
+    initializeAuth();
 
-    // Listen for auth state changes
-    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Only log auth state changes after initial session load to reduce redundant logging
+    // Listen for Firebase auth state changes
+    const unsubscribe = onAuthChange(async (fbUser) => {
       if (hasInitialized) {
-        console.log('Auth State Change:', event, session?.user?.id || null);
+        console.log('Auth State Change (Firebase):', fbUser?.uid || null);
       }
-      
-      setSession(session);
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      
-      // Only update profile for specific auth events to avoid redundant calls
-      if (currentUser && event === 'SIGNED_IN') {
+
+      let tokenSession = null;
+      if (fbUser) {
+        const idToken = await fbUser.getIdToken();
+        tokenSession = { id_token: idToken, user: { id: fbUser.uid, email: fbUser.email } };
+      }
+
+      setSession(tokenSession);
+      setUser(fbUser ?? null);
+
+      if (fbUser) {
         try {
           const profileResult = await createUserProfile(
-            currentUser.id,
-            currentUser.email,
-            currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || ''
+            fbUser.uid,
+            fbUser.email,
+            fbUser.displayName || ''
           );
-          
+
           if (profileResult.success && profileResult.profile) {
             setUserProfile(profileResult.profile);
           }
         } catch (error) {
           console.debug('Profile creation/update failed during auth state change:', error);
-          // Don't block auth flow for profile errors
         }
-      } else if (!currentUser) {
-        // Clear profile when user signs out
+      } else {
         setUserProfile(null);
       }
-      
-      // Mark as initialized after first auth state change
-      if (!hasInitialized) {
-        setHasInitialized(true);
-      }
+
+      if (!hasInitialized) setHasInitialized(true);
     });
 
     return () => {
-      listener.subscription.unsubscribe();
+      try { unsubscribe(); } catch { /* ignore */ }
     };
   }, [hasInitialized]);
   const signIn = async (email: string, password: string) => {
@@ -193,36 +151,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Normalize the email
       const normalizedEmail = email.trim().toLowerCase();
       
-      // Use retry logic for better reliability
-      const { data, error } = await retryOperation(() =>
-        supabase.auth.signInWithPassword({ 
-          email: normalizedEmail, 
-          password
-        })
-      );
-      
-      if (error) {
-        console.error('❌ AuthContext: Sign in error:', error);
-        throw error;
+      // Use Firebase signIn
+      const result = await firebaseSignIn(normalizedEmail, password);
+      const fbUser = result.user;
+
+      try {
+        localStorage.setItem('last_login_attempt', JSON.stringify({
+          email: normalizedEmail,
+          userId: fbUser.uid,
+          timestamp: new Date().toISOString(),
+          success: true
+        }));
+        console.log('✅ AuthContext: Login successful');
+      } catch (err) {
+        console.warn('⚠️ Failed to store login success in localStorage:', err);
       }
 
-      // Record successful login in localStorage for debugging
-      if (data?.user) {
-        try {
-          localStorage.setItem('last_login_attempt', JSON.stringify({
-            email: normalizedEmail,
-            userId: data.user.id,
-            timestamp: new Date().toISOString(),
-            success: true
-          }));
-          console.log('✅ AuthContext: Login successful');
-        } catch (err) {
-          // Storage errors are non-critical
-          console.warn('⚠️ Failed to store login success in localStorage:', err);
-        }
-      }
-
-      return { user: data?.user || null, error: null };
+      return { user: fbUser || null, error: null };
     } catch (error) {
       console.error('❌ AuthContext: Sign in error:', error);
       
@@ -247,43 +192,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       console.log('🔐 AuthContext: Initiating signup for email:', email);
       
-      // Use existing retry logic but with better error handling
-      const { data, error } = await retryOperation(() =>
-        supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: REDIRECT_URL,
-            data: {
-              email: email,
-            }
-          }
-        })
-      );
-      
-      if (error) {
-        console.error('❌ AuthContext: Signup error:', error);
-        throw error;
+      const result = await firebaseSignUp(email, password);
+      const fbUser = result.user;
+
+      try {
+        localStorage.setItem('last_signup_attempt', JSON.stringify({
+          email: email,
+          userId: fbUser.uid,
+          timestamp: new Date().toISOString(),
+          success: true
+        }));
+        console.log('✅ AuthContext: Signup successful, user created');
+      } catch (err) {
+        console.warn('⚠️ Failed to store signup success in localStorage:', err);
       }
 
-      // Record successful signup in localStorage for debugging
-      if (data?.user) {
-        try {
-          localStorage.setItem('last_signup_attempt', JSON.stringify({
-            email: email,
-            userId: data.user.id,
-            timestamp: new Date().toISOString(),
-            success: true
-          }));
-          console.log('✅ AuthContext: Signup successful, user created');
-        } catch (err) {
-          // Storage errors are non-critical
-          console.warn('⚠️ Failed to store signup success in localStorage:', err);
-        }
-      }
-
-      // Profile will be handled by auth state change listener
-      return { user: data?.user || null, error: null };
+      return { user: fbUser || null, error: null };
     } catch (error) {
       console.error('❌ AuthContext: Sign up error:', error);
       
@@ -306,7 +230,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
+      await firebaseSignOut();
       setUser(null);
       setSession(null);
       setUserProfile(null);
@@ -319,107 +243,51 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithOAuth = async (provider: 'google' | 'github') => {
     try {
-      console.log('🔐 Starting OAuth login with:', provider);
+      console.log('🔐 Starting Firebase OAuth login with:', provider);
       
-      // Get the current port to ensure consistency
-      const currentPort = window.location.port || '3000'; // Default to 3000 if port is not specified
-      // Force the redirectUrl to use the current port to avoid mismatch errors
-      const redirectUrl = import.meta.env.VITE_REDIRECT_URL || 
-        (window.location.hostname === 'localhost' ? 
-          `http://localhost:${currentPort}/auth/callback` : 
-          `${window.location.origin}/auth/callback`);
+      // Determine if we should use redirect or popup
+      // Use redirect for mobile devices or if popups might be blocked
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const useRedirect = isMobile;
       
-      console.log('🔗 Redirect URL:', redirectUrl);
-      console.log('🌐 Current location:', window.location.href);
-      console.log('🏠 Window origin:', window.location.origin);
-      console.log('🚀 Environment mode:', import.meta.env.MODE);
-      
-      // Generate a state parameter for security and clear any existing one first
-      localStorage.removeItem('supabase-auth-state'); // Clear any existing state
-      sessionStorage.removeItem('supabase-auth-state'); // Clear from sessionStorage too
-      
-      // Create a more robust state parameter with port information to avoid mismatches
-      const state = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}_port${currentPort}`;
-      localStorage.setItem('supabase-auth-state', state);
+      console.log(`� Using ${useRedirect ? 'redirect' : 'popup'} flow for ${provider} OAuth`);
       
       // Record OAuth attempt for analytics and debugging
       sessionStorage.setItem('last_oauth_attempt', JSON.stringify({
         provider,
         timestamp: new Date().toISOString(),
-        redirectUrl,
-        state,
-        port: currentPort
+        method: useRedirect ? 'redirect' : 'popup'
       }));
       
-      // Configure OAuth options based on provider
-      const oauthOptions = {
-        redirectTo: redirectUrl,
-        queryParams: {}
-      };
-      
-      // Provider-specific configurations
-      if (provider === 'google') {
-        oauthOptions.queryParams = {
-          access_type: 'offline',
-          prompt: 'select_account consent',
-          state
-        };
-      } else if (provider === 'github') {
-        oauthOptions.queryParams = {
-          state
-        };
-      }
-      
-      console.log(`📝 ${provider} OAuth options:`, oauthOptions);
-      
-      // Before initiating OAuth, store the state in sessionStorage as well (redundancy)
-      sessionStorage.setItem('supabase-auth-state', state);
-      
-      // Add timestamp to track when this OAuth attempt was initiated
-      sessionStorage.setItem('oauth-initiated-at', Date.now().toString());
-      
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: oauthOptions
-      });
+      const { user, error } = await signInWithOAuthProvider(provider, useRedirect);
       
       if (error) {
-        console.error(`❌ ${provider} OAuth initiation error:`, error);
-        // Clean up stored state on error
-        localStorage.removeItem('supabase-auth-state');
-        sessionStorage.removeItem('supabase-auth-state');
+        // Handle user cancellation silently
+        if (error.isCancellation || error.code === 'auth/popup-closed-by-user') {
+          console.log(`ℹ️ ${provider} OAuth sign-in cancelled by user`);
+          return; // Don't throw error for user cancellations
+        }
+        
+        console.error(`❌ ${provider} OAuth error:`, error);
+        sessionStorage.setItem('oauth_error', JSON.stringify({
+          provider,
+          timestamp: new Date().toISOString(),
+          error: error instanceof Error ? error.message : String(error)
+        }));
         throw error;
       }
       
-      // Store URL that the OAuth provider will redirect to
-      if (data?.url) {
-        console.log(`🔗 ${provider} OAuth redirect URL:`, data.url);
-        sessionStorage.setItem('oauth_redirect_url', data.url);
-        
-        // For some browsers/environments that might block redirects
-        // We'll add a manual redirect option with a small delay
-        const redirectTimer = setTimeout(() => {
-          if (document.location.href === window.location.href) {
-            console.log(`⚠️ Manual redirect to ${provider} authorization...`);
-            window.location.href = data.url;
-          }
-        }, 2000);
-        
-        // Clean up timer if component unmounts
-        return () => clearTimeout(redirectTimer);
-      } else {
-        console.warn(`⚠️ No redirect URL returned for ${provider} OAuth`);
+      if (user) {
+        console.log(`✅ ${provider} OAuth sign-in successful:`, user.email);
+        // Profile will be created/updated by the onAuthChange listener
+      } else if (useRedirect) {
+        console.log(`🔄 ${provider} OAuth redirect initiated`);
+        // User will be set after redirect completes
       }
       
       console.log(`✅ ${provider} OAuth sign-in initiated successfully`);
     } catch (err) {
       console.error(`❌ ${provider} OAuth sign-in error:`, err);
-      // Record failure for debugging
-      sessionStorage.setItem('oauth_error', JSON.stringify({
-        provider,
-        timestamp: new Date().toISOString(),
-        error: err instanceof Error ? err.message : String(err)
-      }));
       throw err;
     }
   };

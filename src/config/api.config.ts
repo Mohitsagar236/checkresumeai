@@ -16,7 +16,7 @@ export const API_CONFIG = {
   TOGETHER_API_KEY: import.meta.env.VITE_TOGETHER_API_KEY || 'dummy-api-key',
   
   // API Provider Selection
-  PRIMARY_API_PROVIDER: 'openai', // 'openai', 'groq' or 'together'
+  PRIMARY_API_PROVIDER: 'groq', // 'openai', 'groq' or 'together'
     // Request options
   API_TIMEOUT: 60000, // 60 seconds (increased from 30)
   SKILLS_ANALYSIS_TIMEOUT: 45000, // 45 seconds for skills analysis specifically

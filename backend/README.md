@@ -29,6 +29,7 @@ A comprehensive backend API for the CheckResumeAI SaaS platform - an AI-powered 
 - **Framework**: Express.js
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: JWT + Supabase Auth
+	- Migration note: Authentication can be configured to use Firebase Auth. The project now supports verifying Firebase ID tokens on the server side via the `firebase-admin` SDK. Provide a Firebase service account via `FIREBASE_SERVICE_ACCOUNT_JSON` or `FIREBASE_SERVICE_ACCOUNT_PATH` in the backend `.env`.
 - **AI Services**: OpenAI GPT-4, Groq AI
 - **File Processing**: PDF-Parse, Multer
 - **Payment**: Razorpay

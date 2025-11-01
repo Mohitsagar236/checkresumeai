@@ -16,6 +16,13 @@ export const config = {
     apiVersion: process.env.API_VERSION || 'v1',
   },
 
+  // Firebase Configuration (Authentication)
+  firebase: {
+    projectId: process.env.FIREBASE_PROJECT_ID!,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY!,
+  },
+
   // Database Configuration
   database: {
     supabaseUrl: process.env.SUPABASE_URL!,
@@ -30,31 +37,20 @@ export const config = {
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
   },
 
-  // AI API Configuration
+  // AI API Configuration - OpenRouter
   ai: {
-    openai: {
-      apiKey: process.env.OPENAI_API_KEY!,
-      model: 'gpt-4-turbo-preview',
-      maxTokens: 4000,
-    },
-    groq: {
-      apiKey: process.env.GROQ_API_KEY!,
-      model: 'mixtral-8x7b-32768',
-      maxTokens: 32768,
-    },
-    together: {
-      apiKey: process.env.TOGETHER_API_KEY!,
-      model: 'meta-llama/Llama-3.2-70B-Vision-Instruct-Turbo',
+    openrouter: {
+      apiKey: process.env.OPENROUTER_API_KEY!,
+      baseUrl: 'https://openrouter.ai/api/v1',
+      model: 'anthropic/claude-3.5-sonnet', // or any model you prefer
       maxTokens: 4000,
     },
   },
 
-  // Payment Configuration
+  // Payment Configuration (UPI)
   payment: {
-    razorpay: {
-      keyId: process.env.RAZORPAY_KEY_ID!,
-      keySecret: process.env.RAZORPAY_KEY_SECRET!,
-    },
+    upiId: process.env.UPI_ID || 'your-upi-id@paytm',
+    adminEmail: process.env.ADMIN_EMAIL!,
   },
 
   // Email Configuration

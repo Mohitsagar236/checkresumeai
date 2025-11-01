@@ -215,41 +215,27 @@ export const handleSupabaseError = (error: SupabaseErrorType): string => {
 // Enhanced session management with clock skew protection
 export const getValidSession = async () => {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
-    if (error) {
-      // Handle clock skew errors specifically
-      if (error.message?.includes('issued in the future') || error.message?.includes('clock skew')) {
-        console.warn('Clock skew detected, attempting session refresh...');
-        
-        // Try to refresh the session
-        const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-        
-        if (refreshError) {
-          console.error('Session refresh failed:', refreshError);
-          return { session: null, error: refreshError };
-        }
-        
-        return { session: refreshData.session, error: null };
+    // If Firebase is available in the browser, try to get a Firebase ID token
+    let session: any = null;
+    let error: any = null;
+
+    try {
+      // Lazy import to avoid adding firebase as a hard dependency in older environments
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // @ts-ignore
+      const { getIdToken } = await import('../utils/firebaseClient');
+      const idToken = await getIdToken();
+      if (idToken) {
+        session = { id_token: idToken, user: null };
       }
-      
-      return { session: null, error };
+    } catch (e) {
+      // If firebase client not configured, fall back to supabase session
     }
-    
-    // Validate session timestamp
-    if (session && !validateSessionTimestamp(session)) {
-      console.warn('Session failed timestamp validation, attempting refresh...');
-      
-      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-      
-      if (refreshError) {
-        console.error('Session refresh failed:', refreshError);
-        return { session: null, error: refreshError };
-      }
-      
-      return { session: refreshData.session, error: null };
+
+    if (!session) {
+      const { data } = await supabase.auth.getSession();
+      session = data?.session ?? null;
     }
-    
     return { session, error: null };
   } catch (error) {
     console.error('Error getting valid session:', error);

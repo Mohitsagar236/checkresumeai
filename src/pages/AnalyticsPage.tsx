@@ -55,9 +55,13 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   const refreshData = useCallback(async () => {
     if (!user) return;
     
+    // Get user ID - Firebase uses 'uid' property
+    const userId = user.uid || user.id;
+    if (!userId) return;
+    
     try {
       setIsRefreshing(true);
-      const freshData = await refreshAnalyticsData(user.id);
+      const freshData = await refreshAnalyticsData(userId);
       setAnalyticsData(freshData);
       setAnalyticsError(null);
     } catch (err) {
@@ -94,6 +98,13 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   useEffect(() => {
     if (!user) return;
     
+    // Get user ID - Firebase uses 'uid' property
+    const userId = user.uid || user.id;
+    if (!userId) {
+      console.warn('User object exists but has no ID:', user);
+      return;
+    }
+    
     // Clean up previous subscription if it exists
     if (unsubscribeRef.current) {
       unsubscribeRef.current();
@@ -103,14 +114,14 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
     setDashboardLoading(true);
     setAnalyticsError(null);
     
-    fetchUserAnalytics(user.id)
+    fetchUserAnalytics(userId)
       .then((data) => {
         setAnalyticsData(data);
         setDashboardLoading(false);
         
         // Subscribe to real-time updates for premium users
         if (isPremium) {
-          unsubscribeRef.current = subscribeToAnalyticsUpdates(user.id, handleAnalyticsUpdate);
+          unsubscribeRef.current = subscribeToAnalyticsUpdates(userId, handleAnalyticsUpdate);
         }
       })
       .catch((err) => {
@@ -144,7 +155,7 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
   useEffect(() => {
     const debug: DebugInfo = {
       timestamp: new Date().toISOString(),
-      user: user ? { id: user.id, email: user.email } : null,
+      user: user ? { id: user.uid || user.id, email: user.email } : null,
       isPremium,
       location: window.location.href,
       userAgent: navigator.userAgent,
@@ -205,7 +216,12 @@ export function AnalyticsPage() {  const { user, isLoading: authLoading } = useA
           <CardTitle>Error Loading Analytics</CardTitle>
           <CardContent>
             <p className="text-red-600 mb-4">{analyticsError}</p>
-            <Button onClick={() => user && fetchUserAnalytics(user.id).then(setAnalyticsData).catch(e => setAnalyticsError(e.message))}>
+            <Button onClick={() => {
+              const userId = user?.uid || user?.id;
+              if (user && userId) {
+                fetchUserAnalytics(userId).then(setAnalyticsData).catch(e => setAnalyticsError(e.message));
+              }
+            }}>
               Retry
             </Button>
           </CardContent>

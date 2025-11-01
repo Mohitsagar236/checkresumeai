@@ -1,11 +1,14 @@
 import axios from 'axios';
-import { API_CONFIG, SYSTEM_PROMPT } from '../../config/api.config';
+import { SYSTEM_PROMPT } from '../../config/api.config';
 import { ProcessedResume } from '../../utils/pdf/pdfProcessor';
 import { generateMockResumeAnalysis } from '../mock/mockAnalysisService';
 import { ResumeAnalysisResult } from './groqService';
 import { generateCourseSuggestions } from '../courseSuggestionService';
 
-interface OpenAIChatResponse {
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
+
+interface OpenRouterChatResponse {
   id: string;
   choices: {
     index: number;
@@ -31,11 +34,11 @@ export const analyzeResumeWithOpenAI = async (
 ): Promise<ResumeAnalysisResult> => {
   // For development, use mock data if mock flag is set
   if (import.meta.env.VITE_USE_MOCK_API === 'true') {
-    console.log('[OpenAI Service] Using mock data for resume analysis');
+    console.log('[OpenRouter Service] Using mock data for resume analysis');
     return generateMockResumeAnalysis(resumeData, jobRole);
   }
 
-  console.log('[OpenAI Service] Analyzing resume with OpenAI API...');
+  console.log('[OpenRouter Service] Analyzing resume with OpenRouter API...');
     try {
     const resumeText = resumeData.text;
     const sectionsData = resumeData.sections;    // Prepare the sections summary for improved context
@@ -87,27 +90,32 @@ export const analyzeResumeWithOpenAI = async (
     COURSE SUGGESTIONS ARE REQUIRED IN YOUR RESPONSE. Even if you can't find specific courses, provide general course recommendations related to the job role and missing skills.
     `;
 
-    // Call OpenAI API
+    // Call OpenRouter API
     const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
+      `${OPENROUTER_BASE_URL}/chat/completions`,
       {
-        model: 'gpt-4-turbo',
+        model: 'anthropic/claude-3.5-sonnet', // You can change this to any model available on OpenRouter
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: prompt }
         ],
         temperature: 0.2,
         max_tokens: 2048,
-      },      {
+      },
+      {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'CheckResumeAI'
         },
         timeout: 60000 // 60 seconds
       }
-    );      console.log('[OpenAI Service] Analysis completed successfully');
-    const apiResponse: OpenAIChatResponse = response.data;
-    console.log('[OpenAI Service] Response tokens used:', apiResponse.usage?.total_tokens || 'N/A');
+    );
+    
+    console.log('[OpenRouter Service] Analysis completed successfully');
+    const apiResponse: OpenRouterChatResponse = response.data;
+    console.log('[OpenRouter Service] Response tokens used:', apiResponse.usage?.total_tokens || 'N/A');
     
     try {      // Parse the JSON response
       const content = apiResponse.choices[0].message.content;

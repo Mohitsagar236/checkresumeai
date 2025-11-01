@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Session, User } from '@supabase/supabase-js';
+import type { User } from 'firebase/auth';
 
 // Create context with default values
 interface Profile {
@@ -10,14 +10,22 @@ interface Profile {
   created_at: string;
 }
 
+interface FirebaseSession {
+  id_token: string;
+  user: {
+    id: string;
+    email: string | null;
+  };
+}
+
 export const AuthContext = React.createContext<{
   user: User | null;
-  session: Session | null;
+  session: FirebaseSession | null;
   profile: Profile | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ user: User | null; error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ user: User | null; error: Error | null }>;
-  signInWithOAuth: (provider: 'google' | 'github') => Promise<(() => void) | undefined>;
+  signInWithOAuth: (provider: 'google' | 'github') => Promise<void>;
   signOut: () => Promise<void>;
 }>({
   user: null,
@@ -25,6 +33,6 @@ export const AuthContext = React.createContext<{
   profile: null,  isLoading: true,
   signIn: async () => ({ user: null, error: new Error('Not implemented') }),
   signUp: async () => ({ user: null, error: new Error('Not implemented') }),
-  signInWithOAuth: async () => undefined,
+  signInWithOAuth: async () => {},
   signOut: async () => {}
 });

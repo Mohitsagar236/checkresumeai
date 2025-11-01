@@ -46,6 +46,9 @@ const ResumeTipsPage = lazy(() => import('./pages/ResumeTipsPage').then(module =
 const ATSGuidePage = lazy(() => import('./pages/ATSGuidePage').then(module => ({ default: module.ATSGuidePage })));
 const JobSearchPage = lazy(() => import('./pages/JobSearchPage').then(module => ({ default: module.JobSearchPage })));
 
+// Admin pages - lazy load
+const PaymentVerificationPage = lazy(() => import('./pages/PaymentVerificationPage').then(module => ({ default: module.PaymentVerificationPage })));
+
 // Feature detail pages - lazy load
 const ATSCompatibilityAnalysisPage = lazy(() => import('./pages/features/ATSCompatibilityAnalysisPage'));
 const IndustrySpecificInsightsPage = lazy(() => import('./pages/features/IndustrySpecificInsightsPage'));
@@ -358,6 +361,16 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <JobMatchAnalysisPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/admin/payments',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute>
+              <PaymentVerificationPage />
+            </ProtectedRoute>
           </Suspense>
         ),
       },
