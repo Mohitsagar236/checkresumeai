@@ -114,7 +114,12 @@ export default defineConfig(({ mode }) => {
               return 'data-tables';
             }
             
-            // Authentication and API - Supabase and related
+            // React core - MUST be first priority
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react/')) {
+              return 'react-vendor';
+            }
+            
+            // Authentication and API - Supabase and related (depends on React)
             if (id.includes('@supabase') || id.includes('@tanstack/react-query') || id.includes('axios')) {
               return 'api-auth';
             }
@@ -132,11 +137,6 @@ export default defineConfig(({ mode }) => {
             // Utilities and smaller libraries
             if (id.includes('date-fns') || id.includes('clsx') || id.includes('tailwind-merge') || id.includes('lucide-react')) {
               return 'utilities';
-            }
-            
-            // React core
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
             }
             
             // Large individual page components for lazy loading
