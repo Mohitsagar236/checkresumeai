@@ -39,12 +39,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VITE_FIREBASE_API_KEY": "@vite_firebase_api_key",
-    "VITE_FIREBASE_AUTH_DOMAIN": "@vite_firebase_auth_domain",
-    "VITE_FIREBASE_PROJECT_ID": "@vite_firebase_project_id",
-    "VITE_SUPABASE_URL": "@vite_supabase_url",
-    "VITE_SUPABASE_ANON_KEY": "@vite_supabase_anon_key"
-  }
+  ]
 }
