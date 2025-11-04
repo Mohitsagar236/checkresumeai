@@ -136,8 +136,9 @@ export default defineConfig(({ mode }) => {
               return 'forms';
             }
             
-            // Routing - React Router and related
-            if (id.includes('react-router-dom')) {
+            // Routing - React Router and related (depends on React)
+            // CRITICAL: react-helmet-async uses React.createContext at module level
+            if (id.includes('react-router-dom') || id.includes('react-helmet-async')) {
               return 'routing';
             }
             
