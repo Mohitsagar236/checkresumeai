@@ -62,12 +62,13 @@ export default defineConfig(({ mode }) => {
     ],
     optimizeDeps: {
       include: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
         '@radix-ui/react-tabs',
         '@supabase/supabase-js',
         'clsx',
-        'tailwind-merge',
-        'react',
-        'react-dom'
+        'tailwind-merge'
       ],
       esbuildOptions: {
         target: 'esnext'
@@ -75,9 +76,13 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src')
+        '@': path.resolve(__dirname, './src'),
+        // Force ALL React imports to use the exact same instance
+        'react': path.resolve(__dirname, './node_modules/react'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+        'react/jsx-runtime': path.resolve(__dirname, './node_modules/react/jsx-runtime')
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
       conditions: ['import', 'module', 'browser', 'default']
     },
     build: {
@@ -94,7 +99,7 @@ export default defineConfig(({ mode }) => {
         },
         output: {
           manualChunks: (id) => {
-            // React core - MUST use EXACT path matching to avoid catching @radix-ui/react-* packages
+            // React core - MUST be FIRST and use EXACT path matching
             // Only match node_modules/react/ and node_modules/react-dom/ exactly
             if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
               return 'react-vendor';
@@ -110,8 +115,9 @@ export default defineConfig(({ mode }) => {
               return 'charts';
             }
             
-            // UI component libraries - Large UI dependencies
-            if (id.includes('@radix-ui') || id.includes('framer-motion')) {
+            // UI component libraries - Large UI dependencies (depends on React)
+            // CRITICAL: lucide-react MUST be in a React-dependent chunk
+            if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
               return 'ui-components';
             }
             
@@ -135,10 +141,8 @@ export default defineConfig(({ mode }) => {
               return 'routing';
             }
             
-            // Utilities and smaller libraries
-            if (id.includes('date-fns') || id.includes('clsx') || id.includes('tailwind-merge') || id.includes('lucide-react')) {
-              return 'utilities';
-            }
+            // Utilities REMOVED - let Vite handle lucide-react automatically
+            // This prevents utilities from loading before React
             
             // Large individual page components for lazy loading
             if (id.includes('/pages/') && (
