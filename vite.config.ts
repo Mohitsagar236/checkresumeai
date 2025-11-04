@@ -94,6 +94,12 @@ export default defineConfig(({ mode }) => {
         },
         output: {
           manualChunks: (id) => {
+            // React core - MUST use EXACT path matching to avoid catching @radix-ui/react-* packages
+            // Only match node_modules/react/ and node_modules/react-dom/ exactly
+            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+              return 'react-vendor';
+            }
+            
             // PDF.js - Large PDF processing library
             if (id.includes('pdfjs-dist')) {
               return 'pdfjs';
@@ -112,11 +118,6 @@ export default defineConfig(({ mode }) => {
             // Table and virtualization - Heavy data handling
             if (id.includes('@tanstack/react-table') || id.includes('react-virtualized') || id.includes('react-window')) {
               return 'data-tables';
-            }
-            
-            // React core - MUST be first priority
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react/')) {
-              return 'react-vendor';
             }
             
             // Authentication and API - Supabase and related (depends on React)
