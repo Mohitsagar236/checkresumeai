@@ -134,8 +134,44 @@ None documented yet.
 - Backend is not currently running (using Mock API Mode)
 - If backend is needed, port configuration must be updated to avoid conflict with frontend
 
-## Deployment Notes
-- Application is ready for deployment with Replit's publish feature
+## Deployment
+
+### Vercel Deployment (Recommended)
+The application is fully configured for Vercel deployment:
+
+**Configuration Files:**
+- `vercel.json` - Vercel deployment configuration with client-side routing support
+- `VERCEL_DEPLOYMENT.md` - Detailed deployment guide
+
+**Quick Deploy Steps:**
+1. Push code to GitHub
+2. Import project to Vercel at [vercel.com](https://vercel.com)
+3. Vercel will auto-detect settings from `vercel.json`
+4. (Optional) Add environment variables for real AI features
+5. Deploy!
+
+**Build Configuration:**
+- Build Command: `npm run vercel-build`
+- Output Directory: `frontend-build`
+- Build Time: ~33 seconds
+- Total Bundle Size: ~2.5 MB (gzipped: ~690 KB)
+
+**Environment Variables (Optional):**
+- `VITE_USE_MOCK_API=true` - Use mock data (works without any API keys)
+- See `.env.example` for full list of optional variables
+
+**What Works Out of the Box:**
+- ✅ Complete UI/UX with mock data
+- ✅ All pages and navigation
+- ✅ Client-side routing
+- ✅ PDF viewer functionality
+- ✅ Light mode as default theme
+- ✅ Responsive design
+
+See `VERCEL_DEPLOYMENT.md` for detailed instructions.
+
+### Replit Deployment
+- Application is also ready for deployment with Replit's publish feature
 - Frontend builds to `frontend-build/` directory
 - Production mode serves static files from backend when NODE_ENV=production
 
