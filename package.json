@@ -57,5 +57,9 @@
     },
     "optionalDependencies": {
         "firebase": "^10.14.1"
+    },
+    "overrides": {
+        "react": "18.3.1",
+        "react-dom": "18.3.1"
     }
 }
