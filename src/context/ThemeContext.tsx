@@ -17,16 +17,11 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     // Check if we're in a browser environment
     if (typeof window === 'undefined') return false;
     
-    // Check localStorage first
+    // Check localStorage first - only use dark mode if explicitly set by user
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme === 'dark') return true;
-    if (storedTheme === 'light') return false;
     
-    // If no stored preference, check system preference
-    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-      return true;
-    }
-    
+    // Default to light mode as primary theme (ignore system preference)
     return false;
   });
 

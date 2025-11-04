@@ -108,8 +108,8 @@ export function HeaderWithAuth() {
   return (    <header 
       className={`fixed w-full z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-black dark:bg-white shadow-luxury-lg py-3 border-b border-gray-100/50 dark:border-gray-800/50' 
-          : 'bg-black dark:bg-white py-5'
+          ? 'bg-white dark:bg-black shadow-luxury-lg py-3 border-b border-gray-800/50 dark:border-gray-100/50' 
+          : 'bg-white dark:bg-black py-5'
       }`}
     >
       {/* Premium gradient accent line */}
@@ -121,46 +121,46 @@ export function HeaderWithAuth() {
             <div className="relative">
               <FileText className="h-9 w-9 text-blue-600 dark:text-blue-400 mr-3 transform group-hover:scale-110 transition-all duration-300" />
               <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>            <span className="text-2xl font-premium-display font-bold bg-gradient-to-r from-white to-gray-300 dark:from-gray-900 dark:to-gray-700 bg-clip-text text-transparent">
+            </div>            <span className="text-2xl font-premium-display font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
               ResumeAI
             </span>
           </Link>          {/* Desktop Navigation */}
           <div className="hidden md:block">
             <nav className={`flex items-center space-x-8 transition-all duration-500 ${mounted ? 'opacity-100 animate-fadeInNav' : 'opacity-0'}`}>              <Link 
                 to="/" 
-                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 ${
+                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 ${
                   location.pathname === '/'
-                    ? 'text-blue-400 dark:text-blue-600 font-semibold'
-                    : 'text-gray-300 dark:text-gray-800'
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : 'text-gray-800 dark:text-gray-300'
                 }`}
               >
                 Home
               </Link>              <Link 
                 to="/upload" 
-                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 ${
+                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 ${
                   location.pathname === '/upload'
-                    ? 'text-blue-400 dark:text-blue-600 font-semibold'
-                    : 'text-gray-300 dark:text-gray-800'
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : 'text-gray-800 dark:text-gray-300'
                 }`}
               >
                 Analyze Resume
               </Link>
               <Link 
                 to="/master" 
-                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 ${
+                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 ${
                   location.pathname === '/master'
-                    ? 'text-blue-400 dark:text-blue-600 font-semibold'
-                    : 'text-gray-300 dark:text-gray-800'
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : 'text-gray-800 dark:text-gray-300'
                 }`}
               >
                 Master CV
               </Link>
               {user && (
                 <Link 
-                  to="/analytics"                  className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 flex items-center ${
+                  to="/analytics"                  className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center ${
                     location.pathname === '/analytics'
-                      ? 'text-blue-400 dark:text-blue-600 font-semibold'
-                      : 'text-gray-300 dark:text-gray-800'
+                      ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                      : 'text-gray-800 dark:text-gray-300'
                   }`}
                 >
                   <BarChart3 className="h-4 w-4 mr-1.5" />
@@ -168,20 +168,20 @@ export function HeaderWithAuth() {
                 </Link>
               )}              <Link 
                 to="/pricing" 
-                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 ${
+                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 ${
                   location.pathname === '/pricing'
-                    ? 'text-blue-400 dark:text-blue-600 font-semibold'
-                    : 'text-gray-300 dark:text-gray-800'
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : 'text-gray-800 dark:text-gray-300'
                 }`}
               >
                 Pricing
               </Link>
               <Link 
                 to="/faq" 
-                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-400 dark:hover:text-blue-600 ${
+                className={`text-sm font-luxury font-medium transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 ${
                   location.pathname === '/faq'
-                    ? 'text-blue-400 dark:text-blue-600 font-semibold'
-                    : 'text-gray-300 dark:text-gray-800'
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : 'text-gray-800 dark:text-gray-300'
                 }`}
               >
                 FAQ
@@ -192,30 +192,30 @@ export function HeaderWithAuth() {
                   <div className="relative group">                    <Button 
                       variant="outline" 
                       size="sm"
-                      className="flex items-center shadow-sm hover:shadow-md transition-all duration-300 border-gray-700 dark:border-gray-300 hover:border-blue-400 dark:hover:border-blue-600 bg-gray-800 dark:bg-gray-100 text-gray-300 dark:text-gray-800 hover:bg-gray-700 dark:hover:bg-gray-200"
+                      className="flex items-center shadow-sm hover:shadow-md transition-all duration-300 border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-400 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                     >
                       <div className="w-7 h-7 rounded-full bg-gradient-luxury mr-2 flex items-center justify-center text-white text-sm font-medium">
                         {getUserInitials()}
                       </div>
                       <span className="font-medium">{getUserDisplayName()}</span>
-                    </Button>                    <div className="absolute right-0 mt-3 w-52 bg-black dark:bg-white border border-gray-700 dark:border-gray-300 shadow-luxury-lg rounded-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                      <div className="px-4 py-3 border-b border-gray-700 dark:border-gray-300">
-                        <p className="text-sm font-medium text-gray-300 dark:text-gray-800">Signed in as</p>
-                        <p className="text-sm font-semibold text-gray-200 dark:text-gray-900 truncate">{getUserDisplayName()}</p>
-                        <p className="text-xs text-gray-400 dark:text-gray-600 truncate">{user.email}</p>
+                    </Button>                    <div className="absolute right-0 mt-3 w-52 bg-white dark:bg-black border border-gray-300 dark:border-gray-700 shadow-luxury-lg rounded-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                      <div className="px-4 py-3 border-b border-gray-300 dark:border-gray-700">
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-300">Signed in as</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 truncate">{getUserDisplayName()}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{user.email}</p>
                       </div>
                       <Link
                         to="/profile"
-                        className="w-full text-left px-4 py-3 text-sm text-gray-300 dark:text-gray-800 hover:bg-gray-800 dark:hover:bg-gray-100 flex items-center transition-colors duration-200"
+                        className="w-full text-left px-4 py-3 text-sm text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center transition-colors duration-200"
                       >
-                        <User className="h-4 w-4 mr-3 text-gray-400 dark:text-gray-600" />
+                        <User className="h-4 w-4 mr-3 text-gray-600 dark:text-gray-400" />
                         Profile
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-3 text-sm text-gray-300 dark:text-gray-800 hover:bg-gray-800 dark:hover:bg-gray-100 flex items-center transition-colors duration-200"
+                        className="w-full text-left px-4 py-3 text-sm text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center transition-colors duration-200"
                       >
-                        <LogOut className="h-4 w-4 mr-3 text-gray-400 dark:text-gray-600" />
+                        <LogOut className="h-4 w-4 mr-3 text-gray-600 dark:text-gray-400" />
                         Sign out
                       </button>
                     </div>
@@ -225,7 +225,7 @@ export function HeaderWithAuth() {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="font-medium text-gray-300 dark:text-gray-800 hover:bg-gray-800 dark:hover:bg-gray-100 hover:text-blue-400 dark:hover:text-blue-600 transition-all duration-300"
+                        className="font-medium text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300"
                       >
                         Sign In
                       </Button>
@@ -242,7 +242,7 @@ export function HeaderWithAuth() {
                 )}
                 <button
                   onClick={toggleDarkMode}
-                  className="h-9 w-9 rounded-xl flex items-center justify-center text-gray-300 dark:text-gray-600 hover:bg-gray-800 dark:hover:bg-gray-100 border border-gray-700 dark:border-gray-300 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="h-9 w-9 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-400 transition-all duration-300 shadow-sm hover:shadow-md"
                   aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -252,14 +252,14 @@ export function HeaderWithAuth() {
           </div>          {/* Mobile Navigation */}
           <div className="md:hidden flex items-center space-x-3">            <button
               onClick={toggleDarkMode}
-              className="h-9 w-9 rounded-xl flex items-center justify-center text-gray-300 dark:text-gray-600 hover:bg-gray-800 dark:hover:bg-gray-100 border border-gray-700 dark:border-gray-300 transition-all duration-300"
+              className="h-9 w-9 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-300 dark:border-gray-700 transition-all duration-300"
               aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             <button 
               onClick={toggleMenu}
-              className="h-9 w-9 rounded-xl flex items-center justify-center text-gray-300 dark:text-gray-600 hover:bg-gray-800 dark:hover:bg-gray-100 border border-gray-700 dark:border-gray-300 hover:border-blue-400 dark:hover:border-blue-600 transition-all duration-300"
+              className="h-9 w-9 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-400 transition-all duration-300"
               aria-label="Toggle menu"
             >
               <MenuIcon className="h-5 w-5" />
