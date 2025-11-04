@@ -1,0 +1,91 @@
+.pdf-viewer {
+  width: 100%;
+}
+
+.pdf-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.canvas-container {
+  overflow: auto;
+  max-height: 90%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  padding: 1rem;
+  background-color: #f1f5f9;
+}
+
+.canvas-container canvas {
+  display: block;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.page-controls {
+  background-color: white;
+  border-top: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  width: 100%;
+}
+
+.password-input {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.error-container {
+  padding: 1rem;
+  background-color: #FEF2F2;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  border: 1px solid #FECDD3;
+}
+
+.error-title {
+  color: #B91C1C;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-message {
+  color: #7F1D1D;
+  margin-bottom: 0.75rem;
+}
+
+.troubleshooting {
+  background-color: #FFFFFF;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.troubleshooting h4 {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.troubleshooting ul {
+  padding-left: 1.5rem;
+  font-size: 0.875rem;
+  color: #4B5563;
+}
+
+.troubleshooting li {
+  margin-bottom: 0.25rem;
+}

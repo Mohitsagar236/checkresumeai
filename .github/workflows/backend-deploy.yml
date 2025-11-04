@@ -1,0 +1,66 @@
+name: Backend Deploy (EC2 via SSH + PM2)
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'project/backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Tar backend
+        run: |
+          cd project
+          tar -czf backend.tar.gz backend
+
+      - name: Copy to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "project/backend.tar.gz"
+          target: "~/"
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            mkdir -p ~/app
+            tar -xzf ~/project/backend.tar.gz -C ~/app --strip-components=1
+            cd ~/app/backend
+            # Create .env from secrets
+            cat > .env <<'EOF'
+            PORT=8080
+            API_VERSION=v1
+            CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}
+            SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+            SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+            TOGETHER_API_KEY=${{ secrets.TOGETHER_API_KEY }}
+            RAZORPAY_KEY_ID=${{ secrets.RAZORPAY_KEY_ID }}
+            RAZORPAY_KEY_SECRET=${{ secrets.RAZORPAY_KEY_SECRET }}
+            REDIS_URL=${{ secrets.REDIS_URL }}
+            RATE_LIMIT_WINDOW_MS=900000
+            RATE_LIMIT_MAX_REQUESTS=100
+            EOF
+            npm ci
+            npm run build
+            # PM2 app file path based on repo structure
+            pm2 startOrReload ~/app/deploy/aws/pm2-ecosystem.config.cjs || pm2 start ~/app/deploy/aws/pm2-ecosystem.config.cjs
+            pm2 save

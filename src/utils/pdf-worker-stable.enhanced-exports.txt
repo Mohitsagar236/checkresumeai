@@ -1,0 +1,40 @@
+export function isWorkerInitialized(): boolean {
+  return workerInitialized && workerPort !== null;
+}
+
+export function getStableWorkerPort(): MessagePort | null {
+  return workerPort;
+}
+
+export function getEnhancedPdfLoadingOptions(data: ArrayBuffer | Uint8Array, password?: string): DocumentInitParameters {
+  const options: DocumentInitParameters = {
+    data, cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+    cMapPacked: true, standardFontDataUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
+    useWorkerFetch: false, disableAutoFetch: true, disableStream: true, disableRange: true,
+  };
+  if (password) { options.password = password; }
+  if (workerInitialized && workerPort) {
+    options.workerPort = workerPort;
+  }
+  return options;
+}
+
+export function resetGlobalPdfJsState(): void {
+  console.warn("Resetting global PDF.js state...");
+  if (workerPort) {
+    try { workerPort.close(); } catch (e) { console.warn("Error closing worker port during reset:", e); }
+  }
+  workerPort = null; workerInitialized = false;
+  activeMessageHandlers.clear(); globalCallbackCache.clear();
+  // MessageHandler patch remains globally on pdfjsLib.MessageHandler
+}
+
+export async function ensureWorkerIsRunning(): Promise<void> {
+  if (!isWorkerInitialized()) {
+    console.warn("PDF.js worker not initialized or port lost. Re-initializing.");
+    resetGlobalPdfJsState();
+    try { await initializeStableWorker(); } catch (error) {
+      console.error("Failed to re-initialize PDF.js worker:", error);
+    }
+  }
+}

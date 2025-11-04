@@ -1,0 +1,242 @@
+.pdf-viewer {
+  width: var(--viewer-width, 100%);
+  height: var(--viewer-height, 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Support for data attributes for width and height */
+.pdf-viewer[data-width] {
+  width: attr(data-width);
+}
+
+.pdf-viewer[data-height] {
+  height: attr(data-height);
+}
+
+.pdf-container,
+.pdf-viewer-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-color, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 600px; /* Default height */
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: #64748b;
+}
+
+.error-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.error-content {
+  max-width: 28rem;
+  width: 100%;
+  text-align: center;
+}
+
+.error-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: #ef4444;
+  margin-bottom: 1.5rem;
+}
+
+.password-form {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.password-input-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.password-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-right: 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.password-input:focus {
+  border-color: #3b82f6;
+}
+
+.password-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #64748b;
+}
+
+.unlock-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.unlock-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.unlock-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.retry-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin: 0 auto;
+}
+
+.retry-button:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.retry-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.troubleshooting-tips {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f1f5f9;
+  border-radius: 0.375rem;
+  text-align: left;
+}
+
+.troubleshooting-tips h4 {
+  color: #475569;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.troubleshooting-tips ul {
+  color: #64748b;
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}
+
+.troubleshooting-tips li {
+  margin-bottom: 0.5rem;
+}
+
+.viewer-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pdf-canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.page-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border-top: 1px solid #e2e8f0;
+}
+
+.page-button {
+  padding: 0.5rem 1rem;
+  background-color: #f1f5f9;
+  border: none;
+  border-radius: 0.375rem;
+  color: #475569;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.page-button:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.page-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
