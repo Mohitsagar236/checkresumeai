@@ -182,10 +182,11 @@ export default defineConfig(({ mode }) => {
       hmr: {
         overlay: true
       },
-      // Fix for 431 Request Header Fields Too Large
-      host: true,
-      port: 5173,
-      strictPort: false
+      // Replit environment configuration
+      host: '0.0.0.0',
+      port: 5000,
+      strictPort: false,
+      allowedHosts: true
     },
     define: {
       'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : mode),
