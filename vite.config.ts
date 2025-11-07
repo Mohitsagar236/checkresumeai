@@ -98,6 +98,8 @@ export default defineConfig(({ mode }) => {
           main: resolve(__dirname, 'index.html'),
         },
         output: {
+          // Ensure proper chunk ordering
+          inlineDynamicImports: false,
           manualChunks: (id) => {
             // React core - MUST be FIRST and use EXACT path matching
             // Only match node_modules/react/ and node_modules/react-dom/ exactly
