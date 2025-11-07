@@ -1,3 +1,0 @@
-git add .
-git commit -m "Configure for Vercel deployment and set light mode as primary theme"
-git push origin master

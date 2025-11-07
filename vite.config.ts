@@ -98,13 +98,55 @@ export default defineConfig(({ mode }) => {
           main: resolve(__dirname, 'index.html'),
         },
         output: {
-          // Ensure proper chunk ordering
+          // Ensure proper chunk ordering - react MUST load first
           inlineDynamicImports: false,
           manualChunks: (id) => {
-            // React core - MUST be FIRST and use EXACT path matching
-            // Only match node_modules/react/ and node_modules/react-dom/ exactly
-            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            // STEP 1: React core - MUST load FIRST
+            // Only core React (not react-router, react-helmet, etc)
+            if (id.includes('node_modules/react/index') || 
+                id.includes('node_modules/react/jsx-runtime') ||
+                id.includes('node_modules/react-dom/') ||
+                (id.includes('node_modules/react/') && !id.includes('node_modules/react-'))) {
               return 'react-vendor';
+            }
+            
+            // STEP 2: Non-React vendor packages (safe to load early)
+            // These don't use React at all
+            if (id.includes('node_modules/') && (
+              id.includes('axios') ||
+              id.includes('lodash') ||
+              id.includes('clsx') ||
+              id.includes('class-variance-authority') ||
+              id.includes('tailwind-merge')
+            )) {
+              return 'vendor';
+            }
+            
+            // STEP 3: React-dependent packages - load AFTER react-vendor
+            
+            // Zustand - state management (uses React context)
+            if (id.includes('zustand')) {
+              return 'state-management';
+            }
+            
+            // UI component libraries - Large UI dependencies (depends on React)
+            if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
+              return 'ui-components';
+            }
+            
+            // Routing - React Router and related (depends on React)
+            if (id.includes('react-router-dom') || id.includes('react-helmet-async')) {
+              return 'routing';
+            }
+            
+            // Authentication and API - Supabase and related (depends on React)
+            if (id.includes('@supabase') || id.includes('@tanstack/react-query')) {
+              return 'api-auth';
+            }
+            
+            // Chart libraries - Heavy visualization dependencies
+            if (id.includes('recharts')) {
+              return 'charts';
             }
             
             // PDF.js - Large PDF processing library
@@ -112,40 +154,15 @@ export default defineConfig(({ mode }) => {
               return 'pdfjs';
             }
             
-            // Chart libraries - Heavy visualization dependencies
-            if (id.includes('chart.js') || id.includes('react-chartjs-2') || id.includes('recharts')) {
-              return 'charts';
-            }
-            
-            // UI component libraries - Large UI dependencies (depends on React)
-            // CRITICAL: lucide-react MUST be in a React-dependent chunk
-            if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
-              return 'ui-components';
+            // Form handling and validation
+            if (id.includes('react-hook-form') || id.includes('zod') || id.includes('react-dropzone')) {
+              return 'forms';
             }
             
             // Table and virtualization - Heavy data handling
             if (id.includes('@tanstack/react-table') || id.includes('react-virtualized') || id.includes('react-window')) {
               return 'data-tables';
             }
-            
-            // Authentication and API - Supabase and related (depends on React)
-            if (id.includes('@supabase') || id.includes('@tanstack/react-query') || id.includes('axios')) {
-              return 'api-auth';
-            }
-            
-            // Form handling and validation
-            if (id.includes('react-hook-form') || id.includes('zod') || id.includes('react-dropzone')) {
-              return 'forms';
-            }
-            
-            // Routing - React Router and related (depends on React)
-            // CRITICAL: react-helmet-async uses React.createContext at module level
-            if (id.includes('react-router-dom') || id.includes('react-helmet-async')) {
-              return 'routing';
-            }
-            
-            // Utilities REMOVED - let Vite handle lucide-react automatically
-            // This prevents utilities from loading before React
             
             // Large individual page components for lazy loading
             if (id.includes('/pages/') && (
@@ -158,9 +175,14 @@ export default defineConfig(({ mode }) => {
               return 'heavy-pages';
             }
             
-            // All other node_modules as vendor
-            if (id.includes('node_modules')) {
-              return 'vendor';
+            // All other React-related packages
+            if (id.includes('node_modules/') && id.includes('react-')) {
+              return 'react-deps';
+            }
+            
+            // Remaining node_modules
+            if (id.includes('node_modules/')) {
+              return 'vendor-misc';
             }
           }
         }
