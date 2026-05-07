@@ -16,6 +16,7 @@ backend/node_modules/
 dist/
 build/
 frontend-build/
+dist/
 .vite/
 .cache/
 

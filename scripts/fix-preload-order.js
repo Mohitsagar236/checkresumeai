@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const indexPath = resolve(__dirname, '../frontend-build/index.html');
+const indexPath = resolve(__dirname, '../dist/index.html');
 
 console.log('Fixing modulepreload order in index.html...');
 

@@ -189,7 +189,7 @@ export default defineConfig(({ mode }) => {
       },
       // Increase chunk size warning limit to avoid warnings for intentionally large chunks
       chunkSizeWarningLimit: 600,
-      outDir: 'frontend-build',
+      outDir: 'dist',
     },
     css: {
       postcss: './postcss.config.js',
@@ -208,7 +208,7 @@ export default defineConfig(({ mode }) => {
       },
       // Replit environment configuration
       host: '0.0.0.0',
-      port: 5000,
+      port: 3000,
       strictPort: false,
       allowedHosts: true
     },
