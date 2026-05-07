@@ -2,6 +2,12 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "frontend-build",
   "framework": "vite",
+  "experimentalServices": {
+    "frontend": {
+      "routePrefix": "/",
+      "framework": "vite"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
