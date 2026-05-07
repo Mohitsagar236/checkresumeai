@@ -1,6 +1,4 @@
 import { Router, Request, Response } from 'express';
-import Razorpay from 'razorpay';
-import crypto from 'crypto';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../config/index.js';
 import { supabase } from '../config/database.js';
@@ -10,11 +8,12 @@ import { asyncHandler } from '../middleware/errorHandler.js';
 
 const router = Router();
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: config.payment.razorpay.keyId,
-  key_secret: config.payment.razorpay.keySecret,
-});
+// UPI Payment System (replacing Razorpay)
+// Razorpay instance removed - using UPI payment system instead
+// const razorpay = new Razorpay({
+//   key_id: config.payment.razorpay.keyId,
+//   key_secret: config.payment.razorpay.keySecret,
+// });
 
 // Subscription plans
 const SUBSCRIPTION_PLANS = {
@@ -61,6 +60,66 @@ const SUBSCRIPTION_PLANS = {
   }
 };
 
+// UPI Payment endpoint (replacing Razorpay)
+router.post('/create-upi-order', asyncHandler(async (req: Request, res: Response) => {
+  const { planId, currency = 'INR' } = req.body;
+  const userId = req.user!.id;
+  const userEmail = req.user!.email;
+
+  if (!planId || !SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS]) {
+    throw new ValidationError('Invalid subscription plan selected');
+  }
+
+  const plan = SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS];
+
+  try {
+    // Create UPI payment order
+    const orderId = `UPI_${userId}_${Date.now()}`;
+    
+    // Save UPI order to database
+    const { data: savedOrder, error } = await supabase
+      .from('payment_orders')
+      .insert({
+        id: orderId,
+        user_id: userId,
+        plan_id: planId,
+        amount: plan.price,
+        currency,
+        status: 'pending',
+        upi_id: config.payment.upiId,
+        receipt: `receipt_${userId}_${Date.now()}`,
+        created_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) {
+      logger.error('Error saving UPI payment order:', error);
+      throw new PaymentError('Failed to create payment order');
+    }
+
+    logger.info(`UPI payment order created for user ${userId}, plan: ${planId}, order ID: ${orderId}`);
+
+    res.json({
+      message: 'UPI payment order created successfully',
+      order: {
+        id: orderId,
+        amount: plan.price,
+        currency,
+        planId,
+        planName: plan.name,
+        features: plan.features,
+      },
+      upiId: config.payment.upiId,
+    });
+
+  } catch (error) {
+    logger.error('Error creating UPI order:', error);
+    throw new PaymentError('Failed to create payment order');
+  }
+}));
+
+/* Razorpay endpoints (deprecated - commented out)
 // Create payment order
 router.post('/create-order', asyncHandler(async (req: Request, res: Response) => {
   const { planId, currency = 'INR' } = req.body;
@@ -74,187 +133,143 @@ router.post('/create-order', asyncHandler(async (req: Request, res: Response) =>
   const plan = SUBSCRIPTION_PLANS[planId as keyof typeof SUBSCRIPTION_PLANS];
 
   try {
-    // Create Razorpay order
-    const orderOptions = {
-      amount: plan.price,
-      currency,
-      receipt: `receipt_${userId}_${Date.now()}`,
-      notes: {
-        user_id: userId,
-        plan_id: planId,
-        user_email: userEmail,
-      }
-    };
+    // Create Razorpay order (commented out - using UPI instead)
+    // const orderOptions = {
+    //   amount: plan.price,
+    //   currency,
+    //   receipt: `receipt_${userId}_${Date.now()}`,
+    //   notes: {
+    //     user_id: userId,
+    //     plan_id: planId,
+    //     user_email: userEmail,
+    //   }
+    // };
 
-    const order = await razorpay.orders.create(orderOptions);
+    // const order = await razorpay.orders.create(orderOptions);
 
     // Save order to database
-    const { data: savedOrder, error } = await supabase
-      .from('payment_orders')
-      .insert({
-        id: order.id,
-        user_id: userId,
-        plan_id: planId,
-        amount: plan.price,
-        currency,
-        status: 'created',
-        razorpay_order_id: order.id,
-        receipt: order.receipt,
-        created_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
+    // const { data: savedOrder, error } = await supabase
+    //   .from('payment_orders')
+    //   .insert({
+    //     id: order.id,
+    //     user_id: userId,
+    //     plan_id: planId,
+    //     amount: plan.price,
+    //     currency,
+    //     status: 'created',
+    //     razorpay_order_id: order.id,
+    //     receipt: order.receipt,
+    //     created_at: new Date().toISOString(),
+    //   })
+    //   .select()
+    //   .single();
 
-    if (error) {
-      logger.error('Error saving payment order:', error);
-      throw new PaymentError('Failed to create payment order');
-    }
+    // if (error) {
+    //   logger.error('Error saving payment order:', error);
+    //   throw new PaymentError('Failed to create payment order');
+    // }
 
-    logger.info(`Payment order created for user ${userId}, plan: ${planId}, order ID: ${order.id}`);
+    // logger.info(`Payment order created for user ${userId}, plan: ${planId}, order ID: ${order.id}`);
 
-    res.json({
-      message: 'Payment order created successfully',
-      order: {
-        id: order.id,
-        amount: order.amount,
-        currency: order.currency,
-        planId,
-        planName: plan.name,
-        features: plan.features,
-      },
-      razorpayKeyId: config.payment.razorpay.keyId,
-    });
+    // res.json({
+    //   message: 'Payment order created successfully',
+    //   order: {
+    //     id: order.id,
+    //     amount: order.amount,
+    //     currency: order.currency,
+    //     planId,
+    //     planName: plan.name,
+    //     features: plan.features,
+    //   },
+    //   razorpayKeyId: config.payment.razorpay.keyId,
+    // });
 
   } catch (error) {
     logger.error('Error creating Razorpay order:', error);
     throw new PaymentError('Failed to create payment order');
   }
 }));
+*/
 
-// Verify payment
+// Verify UPI payment
 router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
-  const {
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-  } = req.body;
-
+  const { order_id, upi_transaction_id } = req.body;
   const userId = req.user!.id;
 
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-    throw new ValidationError('Missing payment verification data');
+  if (!order_id || !upi_transaction_id) {
+    throw new ValidationError('Missing payment verification data: order_id and upi_transaction_id are required');
   }
 
-  try {
-    // Verify signature
-    const body = razorpay_order_id + '|' + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac('sha256', config.payment.razorpay.keySecret)
-      .update(body.toString())
-      .digest('hex');
+  // Get order details from database
+  const { data: order, error: orderError } = await supabase
+    .from('payment_orders')
+    .select('*')
+    .eq('id', order_id)
+    .eq('user_id', userId)
+    .single();
 
-    if (expectedSignature !== razorpay_signature) {
-      throw new PaymentError('Payment verification failed');
-    }
-
-    // Get order details from database
-    const { data: order, error: orderError } = await supabase
-      .from('payment_orders')
-      .select('*')
-      .eq('razorpay_order_id', razorpay_order_id)
-      .eq('user_id', userId)
-      .single();
-
-    if (orderError || !order) {
-      throw new PaymentError('Order not found');
-    }
-
-    // Fetch payment details from Razorpay
-    const payment = await razorpay.payments.fetch(razorpay_payment_id);
-
-    if (payment.status === 'captured') {
-      // Update order status
-      await supabase
-        .from('payment_orders')
-        .update({
-          status: 'completed',
-          razorpay_payment_id,
-          razorpay_signature,
-          completed_at: new Date().toISOString(),
-        })
-        .eq('id', order.id);
-
-      // Update user subscription
-      const plan = SUBSCRIPTION_PLANS[order.plan_id as keyof typeof SUBSCRIPTION_PLANS];
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + plan.duration);
-
-      await supabase
-        .from('profiles')
-        .update({
-          subscription_plan: order.plan_id,
-          subscription_status: 'active',
-          subscription_expires_at: expiresAt.toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', userId);      logger.info(`Payment verified and subscription activated for user ${userId}, plan: ${order.plan_id}`);
-
-      // Update the user session if available
-      if (req.user) {
-        req.user.subscription = {
-          plan: order.plan_id,
-          status: 'active',
-          expiresAt: expiresAt.toISOString(),
-        };
-      }
-
-      // Generate a new token with the updated subscription info
-      const token = jwt.sign(
-        {
-          userId,
-          email: req.user?.email || '',
-          role: req.user?.role || 'user',
-          subscriptionPlan: order.plan_id,
-          subscriptionStatus: 'active',
-          subscriptionExpiresAt: expiresAt.toISOString()
-        },
-        config.jwt.secret,
-        { expiresIn: config.jwt.expiresIn } as SignOptions
-      );
-
-      res.json({
-        message: 'Payment verified successfully',
-        subscription: {
-          plan: order.plan_id,
-          status: 'active',
-          expiresAt: expiresAt.toISOString(),
-        },
-        token // Return the updated token to the client
-      });
-
-    } else {
-      throw new PaymentError('Payment not captured');
-    }
-
-  } catch (error) {
-    logger.error('Payment verification error:', error);
-    
-    // Update order status to failed
-    await supabase
-      .from('payment_orders')
-      .update({
-        status: 'failed',
-        razorpay_payment_id,
-        error_message: error instanceof Error ? error.message : 'Payment verification failed',
-      })
-      .eq('razorpay_order_id', razorpay_order_id);
-
-    if (error instanceof PaymentError) {
-      throw error;
-    }
-    
-    throw new PaymentError('Payment verification failed');
+  if (orderError || !order) {
+    throw new PaymentError('Order not found');
   }
+
+  if (order.status === 'completed') {
+    throw new PaymentError('Payment already verified');
+  }
+
+  // Mark order as pending verification (admin reviews UPI transactions)
+  const { error: updateError } = await supabase
+    .from('payment_orders')
+    .update({
+      status: 'pending_verification',
+      upi_transaction_id,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', order_id);
+
+  if (updateError) {
+    logger.error('Error updating payment order:', updateError);
+    throw new PaymentError('Failed to submit payment for verification');
+  }
+
+  // Activate subscription immediately (admin can revoke if payment is not confirmed)
+  const plan = SUBSCRIPTION_PLANS[order.plan_id as keyof typeof SUBSCRIPTION_PLANS];
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + plan.duration);
+
+  await supabase
+    .from('profiles')
+    .update({
+      subscription_plan: order.plan_id,
+      subscription_status: 'active',
+      subscription_expires_at: expiresAt.toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId);
+
+  logger.info(`UPI payment submitted for verification: user ${userId}, order: ${order_id}, txn: ${upi_transaction_id}`);
+
+  const token = jwt.sign(
+    {
+      userId,
+      email: req.user?.email || '',
+      role: req.user?.role || 'user',
+      subscriptionPlan: order.plan_id,
+      subscriptionStatus: 'active',
+      subscriptionExpiresAt: expiresAt.toISOString(),
+    },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expiresIn } as SignOptions
+  );
+
+  res.json({
+    message: 'Payment submitted for verification successfully',
+    subscription: {
+      plan: order.plan_id,
+      status: 'active',
+      expiresAt: expiresAt.toISOString(),
+    },
+    token,
+  });
 }));
 
 // Get payment history
@@ -395,34 +410,30 @@ router.get('/plans', (req: Request, res: Response) => {
   });
 });
 
-// Webhook for payment updates (optional)
+// Webhook for payment status updates
 router.post('/webhook', asyncHandler(async (req: Request, res: Response) => {
-  const secret = req.headers['x-razorpay-signature'] as string;
-  const body = JSON.stringify(req.body);
-
-  // Verify webhook signature
-  const expectedSignature = crypto
-    .createHmac('sha256', config.payment.razorpay.keySecret)
-    .update(body)
-    .digest('hex');
-
-  if (secret !== expectedSignature) {
-    logger.warn('Invalid webhook signature');
-    res.status(400).json({ error: 'Invalid signature' });
-    return;
-  }
-
   const event = req.body;
 
   logger.info(`Webhook received: ${event.event}`);
 
-  // Handle different webhook events
   switch (event.event) {
     case 'payment.captured':
-      // Handle successful payment
+      // Mark order as completed in database
+      if (event.order_id) {
+        await supabase
+          .from('payment_orders')
+          .update({ status: 'completed', completed_at: new Date().toISOString() })
+          .eq('id', event.order_id);
+      }
       break;
     case 'payment.failed':
-      // Handle failed payment
+      // Mark order as failed in database
+      if (event.order_id) {
+        await supabase
+          .from('payment_orders')
+          .update({ status: 'failed', updated_at: new Date().toISOString() })
+          .eq('id', event.order_id);
+      }
       break;
     default:
       logger.info(`Unhandled webhook event: ${event.event}`);

@@ -15,7 +15,7 @@
         "render-build": "node scripts/render-build.js",
         "ultra-fast-build": "node scripts/ultra-fast-build.js",
         "setup-pdf-worker": "echo 'Setting up PDF worker files...'",
-        "vercel-build": "node ./node_modules/vite/bin/vite.js build --mode production --emptyOutDir",
+        "vercel-build": "node ./node_modules/vite/bin/vite.js build --mode production --emptyOutDir && node ./scripts/fix-preload-order.js",
         "start": "cd backend && node dist/server.js",
         "health-check": "node scripts/health-check.js",
         "verify-build": "node scripts/verify-build.js"

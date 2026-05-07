@@ -12,13 +12,9 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { StructuredData } from './components/StructuredData';
 import { initializeSimpleWorker } from './utils/pdf-worker-simple';
 import { initPdfErrorMonitoring } from './utils/pdf-error-monitor';
-import { runFixValidation } from './utils/fix-validator';
 import { initializeAllAnalytics } from './utils/analytics';
 import { useCoreWebVitals } from './hooks/useSEO';
 import { enhancedPerformanceMonitor } from './utils/enhancedPerformance';
-import { developmentErrorRecovery } from './utils/developmentErrorRecovery';
-import { buildHealthMonitor } from './utils/buildHealthMonitor';
-import { liveFeatureTester } from './utils/liveFeatureTester';
 
 function App() {
   // Initialize Core Web Vitals monitoring for SEO
@@ -31,20 +27,6 @@ function App() {
     // Initialize enhanced performance monitoring
     enhancedPerformanceMonitor.startComprehensiveMonitoring();
 
-    // Initialize development tools and monitoring
-    if (import.meta.env.DEV) {
-      developmentErrorRecovery.resetRetryCounters();
-      buildHealthMonitor.logHealthStatus();
-      
-      // Initialize live feature testing
-      setTimeout(() => {
-        liveFeatureTester.quickHealthCheck();
-        console.log('🧪 Live feature testing available - run window.testApp()');
-      }, 2000);
-      
-      console.log('🛠️ Development monitoring systems initialized');
-    }
-
     // Initialize PDF worker and error monitoring
     const setupPdfWorker = async () => {
       try {
@@ -55,10 +37,7 @@ function App() {
         await initializeSimpleWorker();
         console.log('Enhanced PDF.js worker initialized successfully');
 
-        // Run fix validation in development mode
-        if (import.meta.env.DEV) {
-          runFixValidation().catch(console.error);
-        }        // Install a global error listener for PDF.js-related errors and Chrome extension warnings
+        // Install a global error listener for PDF.js-related errors and Chrome extension warnings
         const originalOnError = window.onerror;
         window.onerror = function (
           message: string | Event,

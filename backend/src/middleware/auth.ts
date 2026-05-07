@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { config } from '../config/index.js';
 import { supabase } from '../config/database.js';
-import { firebaseAdmin } from '../config/firebase.js';
+import { verifyIdToken } from '../config/firebase.js';
 import { logger } from '../utils/logger.js';
 
 // Extend Request interface to include user
@@ -52,12 +52,26 @@ export const authMiddleware = async (
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     // Verify Firebase ID token
-    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    const { success, decodedToken, error: verifyError } = await verifyIdToken(token);
+
+    if (!success || !decodedToken) {
+      const err = verifyError as any;
+      if (err?.code === 'auth/id-token-expired') {
+        res.status(401).json({ error: 'Access denied', message: 'Token expired', code: 'TOKEN_EXPIRED' });
+        return;
+      }
+      if (err?.message?.includes('Firebase Admin SDK not initialized')) {
+        res.status(503).json({ error: 'Service unavailable', message: 'Authentication service not configured' });
+        return;
+      }
+      res.status(401).json({ error: 'Access denied', message: 'Invalid token' });
+      return;
+    }
 
     const decoded = {
       userId: decodedToken.uid,
       email: decodedToken.email || '',
-      role: decodedToken.role || 'user',
+      role: (decodedToken as any).role || 'user',
     } as JWTPayload;
     
     // Fetch user details from database
@@ -118,26 +132,6 @@ export const authMiddleware = async (
     next();
 
   } catch (error: any) {
-    // firebase-admin throws specific errors
-    if (error?.code === 'auth/id-token-expired') {
-      logger.warn('Firebase ID token expired');
-      res.status(401).json({
-        error: 'Access denied',
-        message: 'Token expired',
-        code: 'TOKEN_EXPIRED'
-      });
-      return;
-    }
-
-    if (error?.code && error.code.startsWith('auth/')) {
-      logger.warn('Invalid Firebase ID token:', error.message || error.code);
-      res.status(401).json({
-        error: 'Access denied',
-        message: 'Invalid token'
-      });
-      return;
-    }
-
     logger.error('Authentication middleware error:', error);
     res.status(500).json({
       error: 'Internal server error',

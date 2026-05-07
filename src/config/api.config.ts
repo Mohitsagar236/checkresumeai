@@ -10,8 +10,8 @@ export const API_CONFIG = {
   OPENAI_RESUME_ANALYSIS_MODEL: 'gpt-4-turbo', // OpenAI model
   RESUME_ANALYSIS_MODEL: 'mixtral-8x7b-32768', // Groq model
   TOGETHER_RESUME_ANALYSIS_MODEL: 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo', // Together AI model
-    // API Keys (These should be loaded from environment variables in production)
-  OPENAI_API_KEY: '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',
+  // API Keys loaded from environment variables
+  OPENAI_API_KEY: import.meta.env.VITE_OPENAI_API_KEY || '',
   GROQ_API_KEY: import.meta.env.VITE_GROQ_API_KEY || 'dummy-api-key',
   TOGETHER_API_KEY: import.meta.env.VITE_TOGETHER_API_KEY || 'dummy-api-key',
   

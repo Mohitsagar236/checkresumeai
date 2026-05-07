@@ -5,7 +5,7 @@
  * PDF.js worker communication errors in v5.2.133
  */
 
-import { resetGlobalPdfJsState, ensureWorkerIsRunning } from "./pdf-worker-stable.enhanced.v2";
+import { resetWorkerState as resetGlobalPdfJsState, ensureWorkerIsRunning } from "./pdf-worker-simple";
 import { callbackStore } from "./pdf-callback-store";
 import * as pdfjsLib from "pdfjs-dist";
 

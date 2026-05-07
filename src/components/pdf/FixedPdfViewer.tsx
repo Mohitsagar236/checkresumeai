@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { AlertTriangle, Lock, RefreshCw } from 'lucide-react';
 import '../../styles/pdfViewer.css';
-import { 
-  getSimplePdfLoadingOptions,
+import {
+  getSimpleLoadingOptions,
   isWorkerInitialized,
-  initializePdfWorkerSimple,
-  ensureWorkerIsRunning
-} from '../../utils/pdf-worker-no-test';
+  initializeSimpleWorker,
+  ensureWorkerIsRunning,
+  safeCleanupTask,
+  safeCleanupDocument as cleanupPdfDocument,
+} from '../../utils/pdf-worker-simple';
 
 interface FixedPdfViewerProps {
   file: File | Blob | null;
@@ -135,7 +137,7 @@ const FixedPdfViewer: React.FC<FixedPdfViewerProps> = ({
       }
       
       // Get simple loading options
-      const loadingOptions = getSimplePdfLoadingOptions(new Uint8Array(fileData), pdfPassword);
+      const loadingOptions = getSimpleLoadingOptions(new Uint8Array(fileData), pdfPassword);
       
       // Create loading task
       const loadingTask = pdfjsLib.getDocument(loadingOptions);
@@ -180,11 +182,6 @@ const FixedPdfViewer: React.FC<FixedPdfViewerProps> = ({
       
       if (onLoadComplete && isMountedRef.current) {
         onLoadComplete(pageCount);
-      }
-      
-      // Clean up the object URL
-      if (file instanceof File) {
-        URL.revokeObjectURL(fileUrl);
       }
       
     } catch (err) {

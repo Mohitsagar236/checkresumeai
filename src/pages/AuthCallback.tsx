@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { diagnoseOAuthError, logEnvironmentInfo } from '../utils/oauth-error-diagnostics';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -23,9 +22,6 @@ export default function AuthCallback() {
         console.log('🔄 Processing authentication callback...');
         console.log('🌐 Current URL:', window.location.href);
         console.log('🏠 Origin:', window.location.origin);
-        
-        // Add enhanced OAuth diagnostic logging
-        logEnvironmentInfo();
         
         // Check for authentication fragments in both URL and hash (OAuth callback)
         const urlParams = new URLSearchParams(window.location.search);
@@ -48,10 +44,6 @@ export default function AuthCallback() {
           // First check for errors with enhanced diagnostics
         if (error_description) {
           console.error('❌ OAuth error:', error_description);
-          
-          // Run diagnostics for better error insights
-          const errorDiagnosis = diagnoseOAuthError(urlParams, hashParams);
-          console.log('🔍 OAuth Error Diagnosis:', errorDiagnosis);
           
           // Show more helpful error message with potential solution
           if (urlParams.get('error_code') === 'bad_oauth_state') {

@@ -121,8 +121,7 @@ const requiredEnvVars = [
   'SUPABASE_URL',
   'SUPABASE_ANON_KEY',
   'JWT_SECRET',
-  'OPENAI_API_KEY',
-  'GROQ_API_KEY',
+  'OPENROUTER_API_KEY',
 ];
 
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
