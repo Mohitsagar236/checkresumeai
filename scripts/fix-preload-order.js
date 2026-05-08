@@ -26,27 +26,13 @@ try {
     preloads.push(match[1]);
   }
   
-  // Sort preloads: react-vendor FIRST, then other chunks in safe order
+  // Sort preloads: vendor first (contains React), then pdfjs last (only needed on PDF pages)
   const sortedPreloads = preloads.sort((a, b) => {
-    const aIsReact = a.includes('react-vendor');
-    const bIsReact = b.includes('react-vendor');
-    
-    if (aIsReact && !bIsReact) return -1;
-    if (!aIsReact && bIsReact) return 1;
-    
-    // After react-vendor, prioritize safe non-React chunks first
     const getOrder = (path) => {
-      if (path.includes('react-vendor')) return 0;  // MUST be first
-      if (path.includes('vendor') && !path.includes('ui') && !path.includes('react') && !path.includes('misc')) return 1;  // Safe vendor
-      if (path.includes('vendor-misc')) return 2;  // Other safe vendors
-      if (path.includes('state-management')) return 3;  // Zustand needs React
-      if (path.includes('ui-components')) return 4;
-      if (path.includes('routing')) return 5;
-      if (path.includes('api-auth')) return 6;
-      if (path.includes('react-deps')) return 7;
-      return 10;  // Everything else
+      if (path.includes('vendor') && !path.includes('pdfjs')) return 0;
+      if (path.includes('pdfjs')) return 9;
+      return 5;
     };
-    
     return getOrder(a) - getOrder(b);
   });
   

@@ -98,99 +98,20 @@ export default defineConfig(({ mode }) => {
           main: resolve(__dirname, 'index.html'),
         },
         output: {
-          // Ensure proper chunk ordering - react MUST load first
           inlineDynamicImports: false,
           manualChunks: (id) => {
-            // STEP 1: React core - MUST load FIRST
-            // Only core React (not react-router, react-helmet, etc)
-            if (id.includes('node_modules/react/index') ||
-                id.includes('node_modules/react/jsx-runtime') ||
-                id.includes('node_modules/react-dom/') ||
-                id.includes('node_modules/scheduler/') ||
-                id.includes('node_modules/loose-envify/') ||
-                (id.includes('node_modules/react/') && !id.includes('node_modules/react-'))) {
-              return 'react-vendor';
-            }
-            
-            // STEP 2: Non-React vendor packages (safe to load early)
-            // These don't use React at all
-            if (id.includes('node_modules/') && (
-              id.includes('axios') ||
-              id.includes('lodash') ||
-              id.includes('clsx') ||
-              id.includes('class-variance-authority') ||
-              id.includes('tailwind-merge')
-            )) {
-              return 'vendor';
-            }
-            
-            // STEP 3: React-dependent packages - load AFTER react-vendor
-            
-            // Zustand - state management (uses React context)
-            if (id.includes('zustand')) {
-              return 'state-management';
-            }
-            
-            // UI component libraries - Large UI dependencies (depends on React)
-            if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('lucide-react')) {
-              return 'ui-components';
-            }
-            
-            // Routing - React Router and related (depends on React)
-            if (id.includes('react-router-dom') || id.includes('react-helmet-async')) {
-              return 'routing';
-            }
-            
-            // Authentication and API - Supabase and related (depends on React)
-            if (id.includes('@supabase') || id.includes('@tanstack/react-query')) {
-              return 'api-auth';
-            }
-            
-            // Chart libraries - Heavy visualization dependencies
-            if (id.includes('recharts')) {
-              return 'charts';
-            }
-            
-            // PDF.js - Large PDF processing library
-            if (id.includes('pdfjs-dist')) {
-              return 'pdfjs';
-            }
-            
-            // Form handling and validation
-            if (id.includes('react-hook-form') || id.includes('zod') || id.includes('react-dropzone')) {
-              return 'forms';
-            }
-            
-            // Table and virtualization - Heavy data handling
-            if (id.includes('@tanstack/react-table') || id.includes('react-virtualized') || id.includes('react-window')) {
-              return 'data-tables';
-            }
-            
-            // Large individual page components for lazy loading
-            if (id.includes('/pages/') && (
-              id.includes('AnalyticsPage') || 
-              id.includes('ATSOptimizationPage') || 
-              id.includes('ResumeAnalyzerPage') ||
-              id.includes('ResultsPage') ||
-              id.includes('ProfilePage')
-            )) {
-              return 'heavy-pages';
-            }
-            
-            // All other React-related packages
-            if (id.includes('node_modules/') && id.includes('react-')) {
-              return 'react-deps';
-            }
-            
-            // Remaining node_modules
+            // Single vendor chunk for all node_modules — prevents circular chunk
+            // dependencies caused by Rollup's interop helper deduplication across chunks.
             if (id.includes('node_modules/')) {
-              return 'vendor-misc';
+              // PDF.js is huge; keep it separate so it only loads on pages that need it
+              if (id.includes('pdfjs-dist')) return 'pdfjs';
+              return 'vendor';
             }
           }
         }
       },
       // Increase chunk size warning limit to avoid warnings for intentionally large chunks
-      chunkSizeWarningLimit: 600,
+      chunkSizeWarningLimit: 3000,
       outDir: 'dist',
     },
     css: {
