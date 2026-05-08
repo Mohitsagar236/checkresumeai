@@ -103,9 +103,11 @@ export default defineConfig(({ mode }) => {
           manualChunks: (id) => {
             // STEP 1: React core - MUST load FIRST
             // Only core React (not react-router, react-helmet, etc)
-            if (id.includes('node_modules/react/index') || 
+            if (id.includes('node_modules/react/index') ||
                 id.includes('node_modules/react/jsx-runtime') ||
                 id.includes('node_modules/react-dom/') ||
+                id.includes('node_modules/scheduler/') ||
+                id.includes('node_modules/loose-envify/') ||
                 (id.includes('node_modules/react/') && !id.includes('node_modules/react-'))) {
               return 'react-vendor';
             }
