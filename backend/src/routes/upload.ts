@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
-import fs from 'fs';
+import fsPromises from 'fs/promises';
 import { config } from '../config/index.js';
 import { supabase } from '../config/database.js';
 import { logger } from '../utils/logger.js';
@@ -107,12 +107,10 @@ router.post('/session/:sessionId', upload.single('file'), asyncHandler(async (re
 
   try {
     // Ensure upload directory exists
-    if (!fs.existsSync(config.upload.uploadPath)) {
-      fs.mkdirSync(config.upload.uploadPath, { recursive: true });
-    }
+    await fsPromises.mkdir(config.upload.uploadPath, { recursive: true });
 
     // Save file to disk
-    fs.writeFileSync(filePath, req.file.buffer);
+    await fsPromises.writeFile(filePath, req.file.buffer);
 
     // Save file info to database
     const fileRecord = {
@@ -157,9 +155,7 @@ router.post('/session/:sessionId', upload.single('file'), asyncHandler(async (re
     logger.error('File upload error:', error);
     
     // Clean up file if it was partially saved
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+    await fsPromises.unlink(filePath).catch(() => {});
     
     throw new Error('Failed to save uploaded file');
   }
@@ -193,9 +189,7 @@ router.post('/session/:sessionId/batch', upload.array('files', 5), asyncHandler(
   const errors = [];
 
   // Ensure upload directory exists
-  if (!fs.existsSync(config.upload.uploadPath)) {
-    fs.mkdirSync(config.upload.uploadPath, { recursive: true });
-  }
+  await fsPromises.mkdir(config.upload.uploadPath, { recursive: true });
 
   for (const file of files) {
     try {
@@ -205,7 +199,7 @@ router.post('/session/:sessionId/batch', upload.array('files', 5), asyncHandler(
       const filePath = path.join(config.upload.uploadPath, fileName);
 
       // Save file to disk
-      fs.writeFileSync(filePath, file.buffer);
+      await fsPromises.writeFile(filePath, file.buffer);
 
       const fileRecord = {
         id: fileId,
@@ -322,9 +316,7 @@ router.delete('/file/:fileId', asyncHandler(async (req: Request, res: Response) 
 
   try {
     // Delete file from disk
-    if (fs.existsSync(file.file_path)) {
-      fs.unlinkSync(file.file_path);
-    }
+    await fsPromises.unlink(file.file_path).catch(() => {});
 
     // Remove file from session
     const updatedFiles = session.files.filter((f: any) => f.id !== fileId);
@@ -372,9 +364,7 @@ router.post('/cleanup', asyncHandler(async (req: Request, res: Response) => {
       // Delete files from disk
       if (session.files) {
         for (const file of session.files) {
-          if (fs.existsSync(file.file_path)) {
-            fs.unlinkSync(file.file_path);
-          }
+          await fsPromises.unlink(file.file_path).catch(() => {});
         }
       }
 

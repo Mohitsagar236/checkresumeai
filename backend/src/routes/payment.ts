@@ -233,6 +233,9 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
 
   // Activate subscription immediately (admin can revoke if payment is not confirmed)
   const plan = SUBSCRIPTION_PLANS[order.plan_id as keyof typeof SUBSCRIPTION_PLANS];
+  if (!plan) {
+    throw new PaymentError(`Invalid plan ID in order: ${order.plan_id}`);
+  }
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + plan.duration);
 
@@ -342,8 +345,9 @@ router.get('/subscription', asyncHandler(async (req: Request, res: Response) => 
     throw new Error('Failed to fetch subscription status');
   }
 
-  const isActive = profile.subscription_status === 'active' && 
-                  new Date(profile.subscription_expires_at) > new Date();
+  const expiresAtDate = profile.subscription_expires_at ? new Date(profile.subscription_expires_at) : null;
+  const isActive = profile.subscription_status === 'active' &&
+                  expiresAtDate !== null && expiresAtDate > new Date();
 
   const plan = SUBSCRIPTION_PLANS[profile.subscription_plan as keyof typeof SUBSCRIPTION_PLANS];
 
@@ -355,8 +359,8 @@ router.get('/subscription', asyncHandler(async (req: Request, res: Response) => 
       status: isActive ? 'active' : 'inactive',
       expiresAt: profile.subscription_expires_at,
       features: plan?.features || ['Basic resume analysis'],
-      daysRemaining: isActive ? 
-        Math.ceil((new Date(profile.subscription_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0,
+      daysRemaining: isActive && expiresAtDate ?
+        Math.ceil((expiresAtDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0,
     },
   });
 }));

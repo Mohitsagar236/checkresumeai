@@ -178,10 +178,11 @@ export const premiumMiddleware = async (
       expiresAt: profile.subscription_expires_at
     };
 
-    const isPremium = 
-      (profile.subscription_plan === 'premium' || profile.subscription_plan === 'professional') && 
+    const expiresAtDate = profile.subscription_expires_at ? new Date(profile.subscription_expires_at) : null;
+    const isPremium =
+      (profile.subscription_plan === 'premium' || profile.subscription_plan === 'professional') &&
       profile.subscription_status === 'active' &&
-      new Date(profile.subscription_expires_at) > new Date();
+      expiresAtDate !== null && expiresAtDate > new Date();
 
     if (!isPremium) {
       res.status(403).json({
