@@ -23,11 +23,15 @@ import { logger } from './utils/logger.js';
 dotenv.config();
 const app = express();
 const server = createServer(app);
+const productionOrigins = (process.env.CORS_ORIGINS?.split(',').map(o => o.trim()).filter(Boolean)) || [
+    'https://checkresumeai.vercel.app',
+    'https://checkresumeai.com'
+];
 const io = new Server(server, {
     cors: {
         origin: process.env.NODE_ENV === 'production'
-            ? ['https://checkresumeai.vercel.app', 'https://checkresumeai.com']
-            : ['http://localhost:3000', 'http://localhost:5173'],
+            ? productionOrigins
+            : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:4173'],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true
     }
@@ -48,7 +52,7 @@ app.use(helmet({
 }));
 app.use(cors({
     origin: process.env.NODE_ENV === 'production'
-        ? ['https://checkresumeai.vercel.app', 'https://checkresumeai.com']
+        ? productionOrigins
         : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:4173'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

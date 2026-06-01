@@ -11,6 +11,11 @@ export const config = {
         environment: process.env.NODE_ENV || 'development',
         apiVersion: process.env.API_VERSION || 'v1',
     },
+    firebase: {
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY,
+    },
     database: {
         supabaseUrl: process.env.SUPABASE_URL,
         supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
@@ -22,27 +27,16 @@ export const config = {
         refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
     },
     ai: {
-        openai: {
-            apiKey: process.env.OPENAI_API_KEY,
-            model: 'gpt-4-turbo-preview',
-            maxTokens: 4000,
-        },
-        groq: {
-            apiKey: process.env.GROQ_API_KEY,
-            model: 'mixtral-8x7b-32768',
-            maxTokens: 32768,
-        },
-        together: {
-            apiKey: process.env.TOGETHER_API_KEY,
-            model: 'meta-llama/Llama-3.2-70B-Vision-Instruct-Turbo',
+        openrouter: {
+            apiKey: process.env.OPENROUTER_API_KEY,
+            baseUrl: 'https://openrouter.ai/api/v1',
+            model: 'anthropic/claude-3.5-sonnet',
             maxTokens: 4000,
         },
     },
     payment: {
-        razorpay: {
-            keyId: process.env.RAZORPAY_KEY_ID,
-            keySecret: process.env.RAZORPAY_KEY_SECRET,
-        },
+        upiId: process.env.UPI_ID || 'your-upi-id@paytm',
+        adminEmail: process.env.ADMIN_EMAIL,
     },
     email: {
         smtp: {
@@ -95,8 +89,7 @@ const requiredEnvVars = [
     'SUPABASE_URL',
     'SUPABASE_ANON_KEY',
     'JWT_SECRET',
-    'OPENAI_API_KEY',
-    'GROQ_API_KEY',
+    'OPENROUTER_API_KEY',
 ];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 if (missingEnvVars.length > 0) {

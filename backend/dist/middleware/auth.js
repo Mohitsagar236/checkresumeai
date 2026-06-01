@@ -1,6 +1,5 @@
-import jwt from 'jsonwebtoken';
-import { config } from '../config/index.js';
 import { supabase } from '../config/database.js';
+import { verifyIdToken } from '../config/firebase.js';
 import { logger } from '../utils/logger.js';
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -13,7 +12,25 @@ export const authMiddleware = async (req, res, next) => {
             return;
         }
         const token = authHeader.substring(7);
-        const decoded = jwt.verify(token, config.jwt.secret);
+        const { success, decodedToken, error: verifyError } = await verifyIdToken(token);
+        if (!success || !decodedToken) {
+            const err = verifyError;
+            if (err?.code === 'auth/id-token-expired') {
+                res.status(401).json({ error: 'Access denied', message: 'Token expired', code: 'TOKEN_EXPIRED' });
+                return;
+            }
+            if (err?.message?.includes('Firebase Admin SDK not initialized')) {
+                res.status(503).json({ error: 'Service unavailable', message: 'Authentication service not configured' });
+                return;
+            }
+            res.status(401).json({ error: 'Access denied', message: 'Invalid token' });
+            return;
+        }
+        const decoded = {
+            userId: decodedToken.uid,
+            email: decodedToken.email || '',
+            role: decodedToken.role || 'user',
+        };
         const { data: user, error } = await supabase
             .from('profiles')
             .select(`
@@ -62,23 +79,6 @@ export const authMiddleware = async (req, res, next) => {
         next();
     }
     catch (error) {
-        if (error instanceof jwt.JsonWebTokenError) {
-            logger.warn('Invalid JWT token:', error.message);
-            res.status(401).json({
-                error: 'Access denied',
-                message: 'Invalid token'
-            });
-            return;
-        }
-        if (error instanceof jwt.TokenExpiredError) {
-            logger.warn('JWT token expired');
-            res.status(401).json({
-                error: 'Access denied',
-                message: 'Token expired',
-                code: 'TOKEN_EXPIRED'
-            });
-            return;
-        }
         logger.error('Authentication middleware error:', error);
         res.status(500).json({
             error: 'Internal server error',

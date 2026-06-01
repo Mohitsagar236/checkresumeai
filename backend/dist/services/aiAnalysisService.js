@@ -1,14 +1,7 @@
-import OpenAI from 'openai';
-import { Groq } from 'groq-sdk';
+import axios from 'axios';
 import { config } from '../config/index.js';
 import { logger } from '../utils/logger.js';
 import { ExternalServiceError } from '../middleware/errorHandler.js';
-const openai = new OpenAI({
-    apiKey: config.ai.openai.apiKey,
-});
-const groq = new Groq({
-    apiKey: config.ai.groq.apiKey,
-});
 const ANALYSIS_PROMPT = `
 You are an expert ATS (Applicant Tracking System) resume analyzer and career consultant. 
 Analyze the following resume and provide a comprehensive evaluation.
@@ -85,11 +78,11 @@ export const analyzeResumeWithAI = async (resumeText, jobRole, analysisType = 'c
         .replace('{jobRole}', jobRole)
         .replace('{analysisType}', analysisType);
     try {
-        if (config.ai.openai.apiKey) {
+        if (config.ai.openrouter.apiKey) {
             try {
-                logger.debug('Using OpenAI for resume analysis');
-                const completion = await openai.chat.completions.create({
-                    model: config.ai.openai.model,
+                logger.debug('Using OpenRouter for resume analysis');
+                const response = await axios.post(`${config.ai.openrouter.baseUrl}/chat/completions`, {
+                    model: config.ai.openrouter.model,
                     messages: [
                         {
                             role: 'system',
@@ -100,45 +93,27 @@ export const analyzeResumeWithAI = async (resumeText, jobRole, analysisType = 'c
                             content: prompt,
                         },
                     ],
-                    max_tokens: config.ai.openai.maxTokens,
+                    max_tokens: config.ai.openrouter.maxTokens,
                     temperature: 0.3,
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${config.ai.openrouter.apiKey}`,
+                        'HTTP-Referer': 'https://checkresumeai.com',
+                        'X-Title': 'CheckResumeAI',
+                    },
                 });
-                const response = completion.choices[0]?.message?.content;
-                if (!response) {
-                    throw new Error('No response from OpenAI');
+                const content = response.data.choices[0]?.message?.content;
+                if (!content) {
+                    throw new Error('No response from OpenRouter');
                 }
-                const analysisResult = JSON.parse(response);
-                logger.info('Resume analysis completed successfully with OpenAI');
+                const analysisResult = JSON.parse(content);
+                logger.info('Resume analysis completed successfully with OpenRouter');
                 return analysisResult;
             }
-            catch (openaiError) {
-                logger.warn('OpenAI analysis failed, trying Groq:', openaiError);
+            catch (apiError) {
+                logger.warn('OpenRouter analysis failed:', apiError);
+                throw apiError;
             }
-        }
-        if (config.ai.groq.apiKey) {
-            logger.debug('Using Groq for resume analysis');
-            const completion = await groq.chat.completions.create({
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are an expert ATS resume analyzer. Always respond with valid JSON.',
-                    },
-                    {
-                        role: 'user',
-                        content: prompt,
-                    },
-                ],
-                model: config.ai.groq.model,
-                max_tokens: Math.min(config.ai.groq.maxTokens, 8000),
-                temperature: 0.3,
-            });
-            const response = completion.choices[0]?.message?.content;
-            if (!response) {
-                throw new Error('No response from Groq');
-            }
-            const analysisResult = JSON.parse(response);
-            logger.info('Resume analysis completed successfully with Groq');
-            return analysisResult;
         }
         throw new Error('No AI service available');
     }

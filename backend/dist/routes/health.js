@@ -1,13 +1,25 @@
 import { Router } from 'express';
 import { config } from '../config/index.js';
+import { supabase } from '../config/database.js';
 const router = Router();
-router.get('/', (req, res) => {
+async function checkDatabase() {
+    try {
+        const { error } = await supabase.from('users').select('id').limit(1);
+        return !error;
+    }
+    catch {
+        return false;
+    }
+}
+router.get('/', async (req, res) => {
+    const dbOk = await checkDatabase();
     res.json({
-        status: 'healthy',
+        status: dbOk ? 'healthy' : 'degraded',
         timestamp: new Date().toISOString(),
         version: '1.0.0',
         environment: config.server.environment,
         uptime: process.uptime(),
+        database: dbOk ? 'connected' : 'unavailable',
         memory: {
             used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + ' MB',
             total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024) + ' MB',
@@ -15,9 +27,10 @@ router.get('/', (req, res) => {
         node: process.version,
     });
 });
-router.get('/detailed', (req, res) => {
+router.get('/detailed', async (req, res) => {
+    const dbOk = await checkDatabase();
     const healthData = {
-        status: 'healthy',
+        status: dbOk ? 'healthy' : 'degraded',
         timestamp: new Date().toISOString(),
         version: '1.0.0',
         environment: config.server.environment,
@@ -38,22 +51,22 @@ router.get('/detailed', (req, res) => {
             },
         },
         services: {
-            database: 'connected',
+            database: dbOk ? 'connected' : 'unavailable',
             ai: {
-                openai: config.ai.openai.apiKey ? 'configured' : 'not configured',
-                groq: config.ai.groq.apiKey ? 'configured' : 'not configured',
+                openrouter: config.ai.openrouter.apiKey ? 'configured' : 'not configured',
             },
-            payment: config.payment.razorpay.keyId ? 'configured' : 'not configured',
+            payment: config.payment.upiId ? 'configured' : 'not configured',
             email: config.email.smtp.user ? 'configured' : 'not configured',
         },
         features: config.features
     };
     res.json(healthData);
 });
-router.get('/ready', (req, res) => {
+router.get('/ready', async (req, res) => {
+    const dbOk = await checkDatabase();
     const checks = {
-        database: true,
-        ai: !!config.ai.openai.apiKey || !!config.ai.groq.apiKey,
+        database: dbOk,
+        ai: !!config.ai.openrouter.apiKey,
         jwt: !!config.jwt.secret,
     };
     const isReady = Object.values(checks).every(Boolean);
